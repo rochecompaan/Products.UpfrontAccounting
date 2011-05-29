@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<object name="portal_workflow" meta_type="Plone Workflow Tool">
+ <object name="cashbookentry_workflow" meta_type="Workflow"/>
+ <object name="creditnote_workflow" meta_type="Workflow"/>
+ <object name="invoice_workflow" meta_type="Workflow"/>
+ <object name="transaction_workflow" meta_type="Workflow"/>
+<!-- ##code-section workflowobjects -->
+<!-- ##/code-section workflowobjects -->   
+ <bindings>
+  <type type_id="CashBookEntry">
+   <bound-workflow workflow_id="cashbookentry_workflow" />
+  </type>
+  <type type_id="CreditNote">
+   <bound-workflow workflow_id="creditnote_workflow" />
+  </type>
+  <type type_id="Invoice">
+   <bound-workflow workflow_id="invoice_workflow" />
+  </type>
+  <type type_id="Transaction">
+   <bound-workflow workflow_id="transaction_workflow" />
+  </type>
+<!-- ##code-section workflowbindings -->
+  <type type_id="Account"/>
+  <type type_id="AccountFolder"/>
+  <type type_id="AccountingFolder"/>
+  <type type_id="Ledger"/>
+  <type type_id="CashBook"/>
+  <type type_id="SubsidiaryLedger"/>
+  <type type_id="CustomerLedger"/>
+  <type type_id="SupplierLedger"/>
+  <type type_id="TransactionFolder"/>
+  <type type_id="TransactionEntry"/>
+  <type type_id="CustomerAccountFolder"/>
+  <type type_id="CustomerAccount"/>
+  <type type_id="InvoiceFolder"/>
+  <type type_id="InvoiceItem"/>
+  <type type_id="QuoteFolder"/>
+  <type type_id="Quote"/>
+  <type type_id="CreditNoteFolder"/>
+  <type type_id="SubsidiaryAccount"/>
+  <type type_id="SubsidiaryAccountFolder"/>
+  <type type_id="InvoiceTemplateFolder"/>
+  <type type_id="InvoiceTemplate"/>
+  <type type_id="OrderedBTreeContainer"/>
+  <type type_id="CashBookEntryFolder"/>
+<!-- ##/code-section workflowbindings -->   
+ </bindings>
+</object>

@@ -1,0 +1,7 @@
+A statement of your account is attached to this email. Please consult
+the statement for the total amount due on your account. Please let us
+know if your account is paid in full and this is not reflected by the
+statement.
+
+Regards,
+<tal:title replace="options/organisation/Title">Upfront Systems</tal:title>

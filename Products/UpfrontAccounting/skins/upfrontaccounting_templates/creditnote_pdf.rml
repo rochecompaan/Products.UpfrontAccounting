@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml_1_0.dtd">
+<document filename="creditnote.pdf"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    tal:attributes="filename string:${here/getId}.pdf">
+<template 
+    pageSize="21cm,29.7cm" 
+    landscape="0" 
+    showBoundary="0"
+    leftMargin="1cm"
+    rightMargin="1cm"
+    topMargin="1cm"
+    bottomMargin="1cm"
+    allowSplitting="1">
+
+<metal:stylesheet metal:use-macro="here/stylesheet/macros/stylesheet"/>
+
+<pageTemplate id="FirstPage">
+
+   <pageGraphics
+     tal:define="root python:here.getAccountingRoot()">
+
+       <tal:hasLogo tal:condition="root/getLogo">
+        <image file="#" x="10.2cm" y="26cm"
+            tal:attributes="file string:${root/absolute_url}/@@pdf-logo;
+                            width python:root.restrictedTraverse('@@pdf-logo-width')();
+                            height python:root.restrictedTraverse('@@pdf-logo-height')()" 
+            />
+       </tal:hasLogo>
+
+   </pageGraphics>       
+
+   <frame  id="CustomerDetail"
+           x1="1.5cm" 
+           y1="21cm" 
+           width="9cm" 
+           height="7cm"
+           />
+
+   <frame  id="OrganisationDetail"
+           x1="10.5cm" 
+           y1="21.5cm" 
+           width="8cm" 
+           height="4cm"
+           />
+
+   <frame  id="content"
+           x1="2cm"
+           y1="2cm"
+           width="17cm"
+           height="20cm"
+           />
+
+</pageTemplate>
+
+<pageTemplate id="Page">
+   <frame  id="content"
+           x1="2cm"
+           y1="0cm"
+           width="17cm"
+           height="28cm"
+           showBoundary="1"
+           />
+</pageTemplate>
+
+</template>
+
+<story tal:define="html_quote python:modules['Products.PythonScripts.standard'].html_quote">
+    <tal:block define="customer python:here.getCustomerAccount()">
+    <para style="InvoiceHeading">
+    Credit Note Nr: <span tal:replace="here/getId"/>
+    </para>
+
+    <para style="Heading2">
+    <span tal:replace="python:html_quote(customer.Title())"/>
+    </para>
+
+    <para style="Heading2">
+    <span tal:replace="python:here.getCreditNoteDate().strftime('%d %B %Y')"/>
+    </para>
+
+    <para tal:condition="customer/getTaxNumber">
+    Your VAT Number: <span tal:replace="python:customer.getTaxNumber()"/>
+    </para>
+
+    <pre style="Normal"><span tal:replace="structure python:here.get_billing_address(customer, outerJoin='\n')"/></pre>
+    </tal:block>
+
+    <nextFrame/>
+
+    <tal:block define="root python:here.getAccountingRoot()">
+    <para>
+    Our VAT Number: <span tal:replace="python:root.getTaxNumber()"/>
+    </para>
+
+    <para>
+    <span tal:replace="structure python:here.get_billing_address(root, outerJoin=', ')"/>
+    </para>
+
+    <para>
+    <b>tel </b><span tal:replace="python:root.getPhone()">+27 21 888 8888</span>
+    <b>fax </b><span tal:replace="python:root.getFax()">+27 21 888 8888</span>
+    </para>
+
+    </tal:block>
+
+    <nextFrame/>
+
+    <blockTable style="StandardTable" colWidths="16cm,2.5cm">
+
+    <tr>
+    <td i18n:translate="label_description">Description</td>
+    <td i18n:translate="label_total">Total</td>
+    </tr>
+
+    <tr tal:define="wrap_text nocall:here/@@wrap_text">
+    <td tal:content="python:wrap_text(here.Title(), columns=60)">Description</td>
+    <td tal:content="here/getAmount">R 100.00</td>
+    </tr>
+
+    <tr>
+    <td i18n:translate="label_subtotal">Subtotal</td>
+    <td tal:content="here/getAmount">R100.00</td>
+    </tr>
+    <tr>
+    <td i18n:translate="label_tax">plus Value Added Tax</td>
+    <td tal:content="here/getTaxAmount">R100.00</td>
+    </tr>
+    <tr>
+    <td i18n:translate="label_total">Total</td>
+    <td tal:content="here/getTotal">R100.00</td>
+    </tr>
+    </blockTable>
+
+</story>
+
+</document>

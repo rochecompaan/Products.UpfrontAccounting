@@ -1,0 +1,185 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      i18n:domain="plone"
+      metal:use-macro="here/main_template/macros/master">
+
+    <head>
+        <metal:block fill-slot="top_slot">
+        <tal:insert tal:replace="nothing"
+                tal:define="dummy python:request.set('enable_border', 1)" />
+        </metal:block>
+
+        <metal:calendar fill-slot="javascript_head_slot">
+            <!-- ECMAScript calendar -->
+            <style type="text/css" media="all"
+                    tal:content="string:@import url($portal_url/jscalendar/calendar-system.css);"></style>
+            <script type="text/javascript"
+                    tal:attributes="src string:$portal_url/jscalendar/calendar_stripped.js"></script>
+            <script type="text/javascript" charset="iso-8859-1"
+                    tal:condition="exists: portal/jscalendar/calendar-en.js"
+                    tal:attributes="src string:$portal_url/jscalendar/calendar-en.js"></script>
+        </metal:calendar>
+    </head>
+
+<body>
+
+    <div metal:fill-slot="main">
+        <tal:batch define="
+            start_date request/start_date|nothing;
+            end_date request/end_date|nothing;
+            batch view/transactions;
+            batch_base_url string:${here/absolute_url}/${view/name};
+            ">
+      <form name="form_edit" action="." method="post">
+
+        <div tal:replace="structure provider:plone.abovecontenttitle" />
+
+        <h1 class="documentFirstHeading">
+          <tal:block replace="structure python:getattr(here, here.getIcon(1)).tag(alt=here.portal_type)"/>
+          <span tal:content="python: putils.pretty_title_or_id(here)" tal:omit-tag="">Directory Id</span>
+        </h1>
+
+        <p class="discreet"
+            tal:condition="not: batch"
+            i18n:translate="description_no_transactions">
+            This folder has no transactions.
+        </p>
+
+
+        <metal:filter metal:define-macro="filter_on_date">
+            <span tal:condition="not:request/start_date|nothing">
+            Showing all transactions
+            </span>
+
+            <span tal:condition="request/filter|nothing">
+            Showing transactions between
+                <strong tal:content="python:plone_view.toLocalizedTime(start_date)"
+                    >1 January 2007</strong> to
+                <strong tal:content="python:plone_view.toLocalizedTime(end_date)"
+                    >31 January 2007</strong>
+            </span>
+
+            <dl id="filter" class="collapsible inline collapsedOnLoad">
+                <dt class="collapsibleHeader" i18n:translate="label_filter">Filter</dt>
+                <dd class="collapsibleContent">
+
+                    <div class="field">
+
+                        <label i18n:translate="label_from">From</label>
+
+                        <div tal:define="inputname string:start_date;
+                                formname string:edit_form;
+                                show_hm python:False;
+                                inputvalue start_date">
+                            <div metal:use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                            calendar pop-up
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="field">
+
+                        <label i18n:translate="label_to">To</label>
+
+                        <div tal:define="inputname string:end_date;
+                                formname string:edit_form;
+                                show_hm python:False;
+                                inputvalue end_date">
+
+                            <div metal:use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                            calendar pop-up
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <input class="standalone"
+                            tabindex=""
+                            type="submit"
+                            name="account_transactions:method"
+                            value="Filter"
+                            i18n:attributes="value"
+                            tal:attributes="tabindex tabindex/next"
+                            />
+                    </div>
+
+                </dd>
+
+            </dl>
+        </metal:filter>
+        <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+        <table class="listing" tal:condition="batch">
+            <thead>
+                <tr>
+                    <th>&nbsp;<tal:title i18n:translate="listingheader_title"
+                        >Title</tal:title>&nbsp;</th>
+                    <th>&nbsp;<tal:size i18n:translate="listingheader_transactiondate"
+                        >Transaction Date</tal:size>&nbsp;</th>
+                    <th width="100px">&nbsp;<tal:state i18n:translate="listingheader_debit"
+                        >Debit</tal:state>&nbsp;</th>
+                    <th width="100px">&nbsp;<tal:state i18n:translate="listingheader_credit"
+                        >Credit</tal:state>&nbsp;</th>
+                    <th width="100px">&nbsp;<tal:state i18n:translate="listingheader_balance"
+                        >Balance</tal:state>&nbsp;</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tal:items tal:repeat="item batch">
+                <tr tal:define="oddrow repeat/item/odd"
+                    tal:attributes="class python:oddrow and 'even' or 'odd'" >
+                    <td>
+                        <a href="#" tal:attributes="href  item/aq_parent/absolute_url">
+                            <span tal:content="item/Title">
+                                Item Title
+                            </span>
+                        </a>
+                    </td>
+                    <td tal:content="python:here.toLocalizedTime(item.getTransactionDate())">
+                        2008-08-24 17:01 PM
+                    </td>
+                    <metal:amount
+                        tal:define="
+                            amount python:item.getAmount();
+                            sign python:item.getDebitCredit();
+                            debit python:sign == 'Debit';
+                            credit python:not debit;">
+                    <td tal:content="python:debit and amount or ''"
+                        style="text-align: right; white-space: nowrap">
+                        R 100.00
+                    </td>
+                    <td tal:content="python:credit and amount or ''"
+                        style="text-align: right; white-space: nowrap">
+                        R 100.00
+                    </td>
+                    </metal:amount>
+                    <td tal:content="python:item.balance"
+                        style="text-align: right; white-space: nowrap">
+                        R 100.00
+                    </td>
+                </tr>
+                </tal:items>
+            </tbody>
+        </table>
+
+        <input class="context"
+               type="submit"
+               name="transaction-exporter:method"
+               value=""
+               i18n:attributes="value"
+               tal:condition="batch"
+               tal:attributes="value string:Export CSV; 
+                               class string:standalone;" />
+
+
+        </form>
+        <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+        </tal:batch>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="upfrontaccounting">
+
+<body>
+
+<metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border', 1)" />
+
+<div metal:fill-slot="main">
+
+    <h1 i18n:translate="heading_import_csv">Import CSV file</h1>
+
+    <h4 i18n:translate="heading_map_fields">Import in progress</h4>
+
+    <div metal:use-macro="here/@@collective.progressbar/macros/progressbar"/>
+
+</div>
+
+</body>
+</html>

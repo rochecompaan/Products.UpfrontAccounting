@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<object name="portal_catalog" meta_type="Plone Catalog Tool">
+  <index name="getAccountNumber" 
+         meta_type="FieldIndex">
+    <indexed_attr value="getAccountNumber"/>
+  </index>
+  <index name="getBankStatementText" 
+         meta_type="KeywordIndex">
+    <indexed_attr value="getBankStatementText"/>
+  </index>
+  <index name="getCreditNoteDate" 
+         meta_type="DateIndex">
+    <indexed_attr value="getCreditNoteDate"/>
+  </index>
+  <column value="getAccountNumber"/>
+  <column value="getCreditNoteDate"/>
+<!-- ##code-section FOOT -->
+  <index name="BankStatementTextAsString" 
+         meta_type="TextIndex">
+  </index>
+<!-- ##/code-section FOOT -->
+</object>

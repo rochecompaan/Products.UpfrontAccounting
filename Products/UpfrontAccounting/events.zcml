@@ -1,0 +1,47 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/zcml">
+
+    <subscriber
+        for=".content.interfaces.IAccountingFolder
+             zope.app.container.interfaces.IObjectAddedEvent"
+        handler=".eventhandlers.initializeAccountingFolder" 
+        />
+
+    <subscriber
+        for=".content.interfaces.ILedger
+             zope.app.container.interfaces.IObjectAddedEvent"
+        handler=".eventhandlers.initializeLedger" 
+        />
+
+    <subscriber
+        for=".content.interfaces.ICustomerLedger
+             zope.app.container.interfaces.IObjectAddedEvent"
+        handler=".eventhandlers.initializeCustomerLedger" 
+        />
+
+    <subscriber
+        for=".content.interfaces.ICashBook
+             zope.app.container.interfaces.IObjectAddedEvent"
+        handler=".eventhandlers.initializeCashBook" 
+        />
+
+    <subscriber
+        for=".content.interfaces.ICashBookEntry
+             zope.app.container.interfaces.IObjectRemovedEvent"
+        handler=".eventhandlers.cashbookEntryRemoved" 
+        />
+
+    <subscriber
+        for=".content.interfaces.ITransaction
+             zope.app.container.interfaces.IObjectRemovedEvent"
+        handler=".eventhandlers.transactionRemoved" 
+        />
+
+    <subscriber
+        for=".content.interfaces.IInvoice
+             zope.app.container.interfaces.IObjectRemovedEvent"
+        handler=".eventhandlers.invoiceRemoved" 
+        />
+
+</configure>
+

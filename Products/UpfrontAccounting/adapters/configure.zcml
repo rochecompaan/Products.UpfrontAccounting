@@ -1,0 +1,89 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    >
+
+  <adapter
+      for="*"
+      factory=".account.AccountTotal"
+      provides="Products.UpfrontAccounting.interfaces.IAccountTotal"
+      />
+
+  <adapter
+      for="*"
+      factory=".account.AccountList"
+      provides="Products.UpfrontAccounting.interfaces.IAccountList"
+      />
+
+  <adapter
+      for="*"
+      factory=".accountcsv.AccountCSVWriter"
+      provides="Products.UpfrontAccounting.interfaces.ICSVWriter"
+      />
+
+  <adapter
+      for="*"
+      factory=".default.ZeroMoneyAdapter"
+      name="Balance"
+      provides="Products.Archetypes.interfaces.IFieldDefaultProvider"
+      />
+
+  <adapter
+      for="*"
+      factory=".default.ZeroMoneyAdapter"
+      provides="Products.UpfrontAccounting.interfaces.IZeroMoneyInstance"
+      />
+
+  <adapter
+      for="Products.UpfrontAccounting.content.interfaces.ITransaction"
+      factory=".default.NowAsDefaultDate"
+      name="effectiveDate"
+      provides="Products.Archetypes.interfaces.IFieldDefaultProvider"
+      />
+
+  <adapter
+      for="Products.UpfrontAccounting.content.interfaces.IInvoice"
+      factory=".default.NowAsDefaultDate"
+      name="InvoiceDate"
+      provides="Products.Archetypes.interfaces.IFieldDefaultProvider"
+      />
+
+  <adapter
+      for="Products.UpfrontAccounting.content.interfaces.IQuote"
+      factory=".default.NowAsDefaultDate"
+      name="QuoteDate"
+      provides="Products.Archetypes.interfaces.IFieldDefaultProvider"
+      />
+
+  <adapter
+      for="*"
+      factory=".default.DefaultCurrencyAdapter"
+      name="InvoiceCurrency"
+      provides="Products.Archetypes.interfaces.IFieldDefaultProvider"
+      />
+
+  <adapter
+      for="*"
+      factory=".mail.MailInvoice"
+      provides="Products.UpfrontAccounting.interfaces.IMailInvoice"
+      />
+
+  <adapter
+      for="*"
+      factory=".mail.MailStatement"
+      provides="Products.UpfrontAccounting.interfaces.IMailStatement"
+      />
+
+  <adapter
+      for="Products.UpfrontAccounting.content.interfaces.ITransaction"
+      factory=".transactioncsv.TransactionCSVWriter"
+      provides="Products.UpfrontAccounting.interfaces.ICSVWriter"
+      />
+
+  <adapter
+      for="Products.UpfrontAccounting.content.interfaces.ITransactionFolder"
+      factory=".transactionfoldercsv.TransactionFolderCSVWriter"
+      provides="Products.UpfrontAccounting.interfaces.ICSVWriter"
+      />
+
+</configure>
+

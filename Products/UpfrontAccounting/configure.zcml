@@ -1,0 +1,50 @@
+<configure xmlns="http://namespaces.zope.org/zope" 
+           xmlns:browser="http://namespaces.zope.org/browser" 
+           xmlns:five="http://namespaces.zope.org/five"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
+           i18n_domain="UpfrontAccounting">
+  
+  <i18n:registerTranslations directory="locales" />
+
+  <include file="profiles.zcml" />
+
+  <include file="generatedsubscribers.zcml"/>
+
+
+  <!-- ##code-section configure.zcml -->
+  <include package=".browser" />
+  <include package=".adapters" />
+  <include file="events.zcml" />
+
+  <!-- suppress deprecation warnings -->
+  <five:deprecatedManageAddDelete class=".content.Account.Account" />
+  <five:deprecatedManageAddDelete class=".content.AccountFolder.AccountFolder" />
+  <five:deprecatedManageAddDelete class=".content.AccountingFolder.AccountingFolder" />
+  <five:deprecatedManageAddDelete class=".content.Ledger.Ledger" />
+  <five:deprecatedManageAddDelete class=".content.CashBook.CashBook" />
+  <five:deprecatedManageAddDelete class=".content.SubsidiaryLedger.SubsidiaryLedger" />
+  <five:deprecatedManageAddDelete class=".content.CustomerLedger.CustomerLedger" />
+  <five:deprecatedManageAddDelete class=".content.SupplierLedger.SupplierLedger" />
+  <five:deprecatedManageAddDelete class=".content.TransactionFolder.TransactionFolder" />
+  <five:deprecatedManageAddDelete class=".content.Transaction.Transaction" />
+  <five:deprecatedManageAddDelete class=".content.TransactionEntry.TransactionEntry" />
+  <five:deprecatedManageAddDelete class=".content.CashBookEntry.CashBookEntry" />
+  <five:deprecatedManageAddDelete class=".content.CustomerAccountFolder.CustomerAccountFolder" />
+  <five:deprecatedManageAddDelete class=".content.CustomerAccount.CustomerAccount" />
+  <five:deprecatedManageAddDelete class=".content.InvoiceFolder.InvoiceFolder" />
+  <five:deprecatedManageAddDelete class=".content.Invoice.Invoice" />
+  <five:deprecatedManageAddDelete class=".content.InvoiceItem.InvoiceItem" />
+  <five:deprecatedManageAddDelete class=".content.QuoteFolder.QuoteFolder" />
+  <five:deprecatedManageAddDelete class=".content.Quote.Quote" />
+  <five:deprecatedManageAddDelete class=".content.CreditNoteFolder.CreditNoteFolder" />
+  <five:deprecatedManageAddDelete class=".content.CreditNote.CreditNote" />
+  <five:deprecatedManageAddDelete class=".content.SubsidiaryAccount.SubsidiaryAccount" />
+  <five:deprecatedManageAddDelete class=".content.SubsidiaryAccountFolder.SubsidiaryAccountFolder" />
+  <five:deprecatedManageAddDelete class=".content.InvoiceTemplateFolder.InvoiceTemplateFolder" />
+  <five:deprecatedManageAddDelete class=".content.InvoiceTemplate.InvoiceTemplate" />
+  <five:deprecatedManageAddDelete class=".content.OrderedBTreeContainer.OrderedBTreeContainer" />
+  <five:deprecatedManageAddDelete class=".content.CashBookEntryFolder.CashBookEntryFolder" />
+
+  <!-- ##/code-section configure.zcml -->
+
+</configure>

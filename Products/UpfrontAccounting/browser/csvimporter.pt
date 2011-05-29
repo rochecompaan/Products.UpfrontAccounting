@@ -1,0 +1,201 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="upfrontaccounting">
+
+<body>
+
+<metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border', 1)" />
+
+<div metal:fill-slot="main">
+<div metal:define-macro="main" tal:omit-tag="">
+
+<tal:status define="status view/update"/>
+
+<tal:upload_file condition="not:request/importcsv|nothing">
+
+    <h1 i18n:translate="heading_import_csv">Import CSV file</h1>
+
+    <p>
+    The import csv wizard helps you to import a csv file into the
+    current folder.
+    </p>
+
+    <h4 i18n:translate="heading_import_csv_step_one"
+        >Step 1: Upload file</h4>
+
+    <form name="form" action="." method="post" enctype="multipart/form-data"
+            tal:attributes="action string:${here/absolute_url}/${view/name}">
+
+        <input name="importcsv" type="hidden" value="1"/>
+
+        <div class="field">
+            <div i18n:translate="select_file">Select file</div>
+            <input type="file" name="csv_file" size="50"/>
+        </div>
+
+        <div class="field" tal:condition="here/allowedContentTypes">
+            <div i18n:translate="select_content_type">Select content type</div>
+            <select name="content_type">
+                <option tal:repeat="ctype here/allowedContentTypes"
+                        tal:attributes="value ctype/getId"
+                        tal:content="ctype/getId"/>
+            </select>
+        </div>
+
+        <input class="context"
+            type="submit"
+            value="Next"
+            name="selectformat"
+            i18n:attributes="value"
+            tabindex=""
+            tal:attributes="tabindex tabindex/next;"
+            />
+
+    </form>
+
+</tal:upload_file>
+
+<tal:selectformat tal:condition="request/selectformat|nothing">
+
+    <h1 i18n:translate="heading_import_csv">Import CSV file</h1>
+
+    <h4 i18n:translate="define_data_format">Step 2: Define data format</h4>
+    
+    <p i18n:translate="define_data_intro">
+    Specify the format of your CSV file in the form below
+    </p>
+
+    <form name="form" action="." method="post" enctype="multipart/form-data"
+            tal:attributes="action string:${here/absolute_url}/${view/name}">
+
+      <input name="importcsv" type="hidden" value="1"/>
+      <input type="hidden" name="content_type" tal:attributes="value request/content_type|nothing">
+
+      <fieldset>
+
+          <div class="field">
+              <label for="delimiter" i18n:translate="field_seperator"
+                  >Field seperator/delimiter:</label>
+              <br/>
+
+              <select name="delimiter">
+                  <option value="comma" i18n:translate="">Comma</option>
+                  <option value="asterisk" i18n:translate="">Asterisk</option>
+                  <option value="tab" i18n:translate="">Tab</option>
+                  <option value="semicolon" i18n:translate="">Semicolon</option>
+                  <option value="colon" i18n:translate="">Colon</option>
+                  <option value="space" i18n:translate="">Space</option>
+              </select>
+          </div>
+
+          <div class="field">
+              <label for="quote_char" i18n:translate="text_seperator"
+                  >Text seperator/quote character:</label>
+              <br/>
+              <select name="quote_char">
+                  <option value="double_quote">"</option>
+                  <option value="single_quote">'</option>
+              </select>
+          </div>
+
+          <div class="field">
+              <label for="encoding" i18n:translate="charset">Encoding/charset:</label>
+              <br/>
+              <input name="encoding" value="utf-8">
+          </div>
+
+          <div class="submit">
+              <input class="context"
+                     type="submit"
+                     value="Next"
+                     name="preview"
+                     i18n:attributes="value"
+                     tabindex=""
+                     tal:attributes="tabindex tabindex/next;"
+                     />
+          </div>
+
+      </fieldset>
+
+    </form>
+
+</tal:selectformat>
+
+<tal:preview tal:condition="request/preview|nothing">
+
+    <tal:rows tal:define="rows view/get_rows_sample">
+
+    <h1 i18n:translate="heading_import_csv">Import CSV file</h1>
+
+    <h4 i18n:translate="heading_map_fields">Step 3: Preview</h4>
+
+    <form name="form" action="." method="post"
+            tal:attributes="action string:${here/absolute_url}/${view/name}">
+
+        <input name="importcsv" type="hidden" value="1"/>
+        <input type="hidden" name="content_type" tal:attributes="value request/content_type|nothing">
+        <input type="hidden" name="quote_char" tal:attributes="value request/quote_char">
+        <input type="hidden" name="delimiter" tal:attributes="value request/delimiter">
+        <input type="hidden" name="encoding" tal:attributes="value request/encoding">
+        <input type="hidden" name="n_fields:int" 
+                tal:attributes="value python:len(rows[0])"
+                tal:condition="rows">
+
+        <div style="width: 500px;" i18n:translate="map_fields_intro">
+
+        Verify that your options are correct by looking at the table
+        below.
+
+        <br/>
+
+        </div>
+        <br/>
+        <div tal:condition="not:rows">
+            <b i18n:translate="missing_file">Missing or empty file</b>
+        </div>
+
+        <table border="1" cellspacing="0" cellpadding="4"
+            tal:condition="rows">
+            <tr align="left" valign="top">
+                <td tal:repeat="cell python:rows[0]">
+                    <strong
+                        tal:define="idx repeat/cell/index;
+                                    headers view/get_headers"
+                        tal:content="python:headers[idx]"/>
+                </td>
+            </tr>
+            <tr align="left" valign="top"
+                tal:repeat="row rows">
+                <td tal:repeat="cell row"
+                    tal:content="cell">
+                    cell
+                </td>
+            </tr>
+        </table>
+
+        <br/>
+        <div class="submit" tal:condition="rows">
+            <br/>
+            <input class="context"
+                    type="submit"
+                    value="Start Import"
+                    name="import"
+                    i18n:attributes="value"
+                    tabindex=""
+                    tal:attributes="tabindex tabindex/next;"
+                    />
+
+        </div>
+
+    </form>
+
+    </tal:rows>
+
+</tal:preview>
+</div>
+</div>
+
+</body>
+</html>

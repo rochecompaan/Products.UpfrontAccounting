@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<object name="TransactionFolder"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone">
+   
+ <property name="title" i18n:translate="">Transaction Folder</property>
+ <property name="description" i18n:translate=""></property>
+ <property name="content_icon">TransactionFolder.gif</property>
+ <property name="content_meta_type">TransactionFolder</property>
+ <property name="product">UpfrontAccounting</property>
+ <property name="factory">addTransactionFolder</property>
+ <property name="immediate_view">listtransactions</property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+   <element value="Transaction"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">listtransactions</property>
+ <property name="view_methods">
+  <element value="folder_summary_view"/>
+  <element value="folder_tabular_view"/>
+  <element value="atct_album_view"/>
+  <element value="folder_listing"/>
+  <element value="listtransactions"/>
+ </property>
+ <property name="default_view_fallback">False</property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="view" to="(selected layout)"/>
+ <alias from="edit" to="base_edit"/>
+ <alias from="sharing" to="@@sharing"/>
+ <action title="Transactions" 
+         i18n:attributes="title"
+         action_id="view"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/listtransactions" 
+         visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="edit" 
+         i18n:attributes="title"
+         action_id="edit"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/edit" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="metadata" 
+         i18n:attributes="title"
+         action_id="metadata"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/metadata" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="Import" 
+         i18n:attributes="title"
+         action_id="importcsv"
+         category="document_actions" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/transactionimporter" 
+         visible="True">
+  <permission value="Modify Portal Content"/>
+ </action>
+</object>

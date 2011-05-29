@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<object name="SubsidiaryTransactionFolder"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+   
+ <property name="title">SubsidiaryTransactionFolder</property>
+ <property name="description"></property>
+ <property name="content_icon">SubsidiaryTransactionFolder.gif</property>
+ <property name="content_meta_type">SubsidiaryTransactionFolder</property>
+ <property name="product">UpfrontAccounting</property>
+ <property name="factory">addSubsidiaryTransactionFolder</property>
+ <property name="immediate_view">base_view</property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+   <element value="SubsidiaryTransaction"/>
+   <element value="Transaction"/>
+   <element value="SubsidiaryTransaction"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">base_view</property>
+ <property name="view_methods">
+  <element value="base_view"/>
+ </property>
+ <property name="default_view_fallback">False</property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="view" to="(selected layout)"/>
+ <alias from="edit" to="base_edit"/>
+ <alias from="properties" to="base_metadata"/>
+ <alias from="sharing" to="folder_localrole_form"/>
+ <action title="edit" 
+         action_id="edit"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/edit" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="metadata" 
+         action_id="metadata"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/metadata" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="Transactions" 
+         action_id="transactions"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/transactionfolder_transactions" 
+         visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="view" 
+         action_id="view"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/view" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+</object>

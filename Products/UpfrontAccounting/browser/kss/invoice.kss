@@ -1,0 +1,23 @@
+select#InvoiceCurrency:change {
+    action-server: edit_invoice_currency;
+    edit_invoice_currency-currency: currentFormVar('InvoiceCurrency');
+}
+
+a#additem:click {
+    evt-click-preventdefault: true;
+    action-server: @@add_invoice_item;
+}
+
+img.delitem:click {
+    action-server: del_invoice_item;
+    del_invoice_item-itemId: nodeAttr('itemId', True);
+}
+
+.item textarea:blur,
+.item select:change,
+.item input[type=radio]:click,
+.item input:blur {
+    action-server: edit_invoice_item;
+    edit_invoice_item-itemId: nodeAttr('itemId', True);
+    edit_invoice_item-kssSubmitForm: currentForm();
+}

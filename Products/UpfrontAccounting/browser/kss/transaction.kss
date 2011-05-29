@@ -1,0 +1,24 @@
+#archetypes-fieldname-title input:blur,
+#archetypes-fieldname-effectiveDate select:change {
+    action-server: edit_transaction;
+    edit_transaction-kssSubmitForm: currentForm();
+}
+
+a#addentry:click {
+    evt-click-preventdefault: true;
+    action-server: @@add_transaction_entry;
+}
+
+img.delentry:click {
+    action-server: del_transaction_entry;
+    del_transaction_entry-entryId: nodeAttr('entryId', True);
+}
+
+.entry input[type='radio']:click,
+.entry input:blur {
+    action-server: editField;
+    editField-entryId: nodeAttr('entryId', True);
+    editField-fieldName: nodeAttr('fieldName', True);
+    editField-kssSubmitForm: currentForm();
+}
+

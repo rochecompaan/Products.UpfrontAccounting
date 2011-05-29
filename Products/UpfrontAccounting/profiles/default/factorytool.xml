@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<object name="portal_factory" meta_type="Plone Factory Tool">
+ <factorytypes>
+  <type portal_type="Account"/>
+  <type portal_type="AccountFolder"/>
+  <type portal_type="AccountingFolder"/>
+  <type portal_type="Ledger"/>
+  <type portal_type="CashBook"/>
+  <type portal_type="SubsidiaryLedger"/>
+  <type portal_type="CustomerLedger"/>
+  <type portal_type="SupplierLedger"/>
+  <type portal_type="TransactionFolder"/>
+  <type portal_type="CashBookEntry"/>
+  <type portal_type="CustomerAccountFolder"/>
+  <type portal_type="CustomerAccount"/>
+  <type portal_type="InvoiceFolder"/>
+  <type portal_type="InvoiceItem"/>
+  <type portal_type="QuoteFolder"/>
+  <type portal_type="CreditNoteFolder"/>
+  <type portal_type="SubsidiaryAccount"/>
+  <type portal_type="SubsidiaryAccountFolder"/>
+  <type portal_type="InvoiceTemplateFolder"/>
+  <type portal_type="InvoiceTemplate"/>
+  <type portal_type="OrderedBTreeContainer"/>
+  <type portal_type="CashBookEntryFolder"/>
+ </factorytypes>
+</object>

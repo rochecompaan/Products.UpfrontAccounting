@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<object name="portal_kss" meta_type="KSS Registry">
+ <kineticstylesheet cacheable="True" compression="safe" cookable="True"
+    enabled="1" expression="python:here.portal_type == 'CashBookEntryFolder'"
+    id="++resource++upfrontaccounting.cashbook.kss"/>
+ <kineticstylesheet cacheable="True" compression="safe" cookable="True"
+    enabled="1" expression="python:here.portal_type == 'Transaction'"
+    id="++resource++upfrontaccounting.transaction.kss"/>
+ <kineticstylesheet cacheable="True" compression="safe" cookable="True"
+    enabled="1" expression="python:here.portal_type in ('Quote', 'Invoice', 'InvoiceTemplate')"
+    id="++resource++upfrontaccounting.invoice.kss"/>
+</object>

@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="upfrontaccounting">
+
+<head>
+
+<metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border', 1)" />
+
+<metal:calendar fill-slot="javascript_head_slot">
+    <!-- ECMAScript calendar -->
+    <style type="text/css" media="all"
+        tal:content="string:@import url($portal_url/jscalendar/calendar-system.css);"></style>
+    <script type="text/javascript"
+        tal:attributes="src string:$portal_url/jscalendar/calendar_stripped.js"></script>
+    <script type="text/javascript" charset="iso-8859-1"
+        tal:condition="exists: portal/jscalendar/calendar-en.js"
+        tal:attributes="src string:$portal_url/jscalendar/calendar-en.js"></script>
+</metal:calendar>
+
+</head>
+
+<body>
+
+    <div metal:fill-slot="main">
+
+        <tal:status define="status view/update"/>
+
+        <h1 i18n:translate="label_closing_transfers"
+            class="documentFirstHeading">
+            Closing transfers
+        </h1>
+
+        <form name="closing_transfers" method="post"
+            tal:attributes="action string:${here/absolute_url}/closing-transfers">
+            <div class="field">
+
+                <label for="closing_transfers_date"
+                    i18n:translate="label_closing_transfers_date">Date for
+                    closing transfers</label>
+                <br/>
+
+                <tal:define define="
+                    id string:closing_transfers_date;
+                    inputname id;
+                    show_hm python:False;
+                    formname string:closing_transfers;
+                    value request/closing_transfers_date | string:'';
+                    inputvalue value">
+                <metal:use use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                    a calendar, hopefully
+                </metal:use>
+                </tal:define>
+            </div>
+
+            <div class="field">
+                <input tabindex=""
+                    class="standalone"
+                    type="submit"
+                    name="submit"
+                    value="Submit"
+                    i18n:attributes="value"
+                    />                       
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

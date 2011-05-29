@@ -1,0 +1,6 @@
+Your latest invoice is attached to this email. A statement of your
+account will be sent in a separate email. Please consult the statement
+for the total amount due on your account.
+
+Regards,
+<tal:title replace="options/OrganisationName">Upfront Systems</tal:title>

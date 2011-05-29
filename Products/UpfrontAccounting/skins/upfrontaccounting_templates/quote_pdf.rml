@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml_1_0.dtd">
+<document filename="quote.pdf"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    tal:define="wrap_text nocall:here/@@wrap_text;"
+<template 
+    pageSize="21cm,29.7cm" 
+    landscape="0" 
+    showBoundary="0"
+    leftMargin="1cm"
+    rightMargin="1cm"
+    topMargin="1cm"
+    bottomMargin="1cm"
+    allowSplitting="1">
+
+<metal:stylesheet metal:use-macro="here/stylesheet/macros/stylesheet"/>
+
+<pageTemplate id="FirstPage">
+
+   <pageGraphics>
+
+        <image file="#" tal:attributes="file string:${here/portal_url}/logo.jpg"
+            x="10cm" y="26cm"/>
+
+   </pageGraphics>       
+
+   <frame  id="CustomerDetail"
+           x1="1.5cm" 
+           y1="21cm" 
+           width="8cm" 
+           height="7cm"
+           />
+
+   <frame  id="OrganisationDetail"
+           x1="10.5cm" 
+           y1="21.5cm" 
+           width="8cm" 
+           height="4cm"
+           />
+
+   <frame  id="content"
+           x1="2cm"
+           y1="2cm"
+           width="17cm"
+           height="20cm"
+           />
+
+</pageTemplate>
+
+<pageTemplate id="Page">
+   <frame  id="content"
+           x1="2cm"
+           y1="0cm"
+           width="17cm"
+           height="28cm"
+           showBoundary="1"
+           />
+</pageTemplate>
+
+</template>
+
+<story>
+    <tal:block define="customer python:here.getCustomerAccount()">
+    <para style="QuoteHeading">
+    Quote Nr: <span tal:replace="here/getId"/>
+    </para>
+
+    <para style="Heading2">
+    <span tal:replace="python:customer.Title()"/>
+    </para>
+
+    <para style="Heading2">
+    <span tal:replace="python:here.getQuoteDate().strftime('%d %B %Y')"/>
+    </para>
+
+    <para tal:condition="customer/getTaxNumber">
+    Your VAT Number: <span tal:replace="python:customer.getTaxNumber()"/>
+    </para>
+
+    <pre style="Normal">
+    <span tal:replace="structure python:here.get_billing_address(customer, outerJoin='\n')"/>
+    </pre>
+    </tal:block>
+
+    <para style="Normal">
+    <span tal:replace="python:here.getNotes()"/>
+    </para>
+
+    <nextFrame/>
+
+    <tal:block define="root python:here.getAccountingRoot()">
+    <para>
+    Our VAT Number: <span tal:replace="python:root.getTaxNumber()"/>
+    </para>
+
+    <para>
+    <span tal:replace="structure python:here.get_billing_address(root, outerJoin=', ')"/>
+    </para>
+
+    <para>
+    <b>tel </b><span tal:replace="python:root.getPhone()">+27 21 888 8888</span>
+    <b>fax </b><span tal:replace="python:root.getFax()">+27 21 888 8888</span>
+    </para>
+
+    </tal:block>
+
+    <nextFrame/>
+
+    <blockTable style="StandardTable"
+        colWidths="8.5cm,2.5cm,2.5cm,2.5cm,2.5cm"
+        >
+
+    <tr>
+    <td i18n:translate="label_description">Description</td>
+    <td i18n:translate="label_unit">Unit</td>
+    <td i18n:translate="label_quantity">Quantity</td>
+    <td i18n:translate="label_price">Price</td>
+    <td i18n:translate="label_total">Total</td>
+    </tr>
+
+    <tr tal:repeat="item here/objectValues">
+    <td tal:content="python:wrap_text(item.getItemDescription(), 60)">Description</td>
+    <td tal:content="item/getUnit">hour</td>
+    <td tal:content="item/getQuantity">10.00</td>
+    <td tal:content="item/getUnitPrice">R 10.00</td>
+    <td tal:content="item/getTotal">R 100.00</td>
+    </tr>
+
+    <tr>
+    <td i18n:translate="label_subtotal">Subtotal</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td tal:content="here/getSubTotal">R100.00</td>
+    </tr>
+    <tr>
+    <td i18n:translate="label_tax">plus Value Added Tax</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td tal:content="here/getTaxAmount">R100.00</td>
+    </tr>
+    <tr>
+    <td i18n:translate="label_total">Total</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td tal:content="here/getTotal">R100.00</td>
+    </tr>
+    </blockTable>
+
+    <spacer length="20"/>
+
+    <para style="Heading2">Terms and conditions</para>
+
+    <tal:block define="root python:here.getAccountingRoot();
+                       customer python:here.getCustomerAccount()">
+    <para style="Normal">
+    This quotation is valid for 20 business days
+    </para>
+
+    <spacer length="10" />
+
+    <para style="Normal">
+    Signatories of this quotation agrees to pay an invoice reflecting
+    items in the quotation upon completion of the quoted items and
+    presentation of the invoice.
+    </para>
+
+    <spacer length="10" />
+
+    <para style="Normal">
+    A signed copy of this document should be faxed to <span
+    tal:replace="root/Title">Upfront Systems</span> at <span
+    tal:replace="root/getFax">+27 21 888 8888</span> or emailed to <span
+    tal:replace="root/getEmail">accounts@upfrontsystems.co.za</span>
+    </para>
+
+    <spacer length="10" />
+
+    <para style="Normal">
+    Signed by ______________________________ on behalf of <b tal:content="python:customer.Title()">Customer Name</b>
+    </para>
+
+    <spacer length="10" />
+
+    <para style="Normal">
+    at ______________________________ on ______________________________
+    </para>
+
+    <spacer length="20" />
+
+    <para style="Normal">
+    Signature ______________________________
+    </para>
+    </tal:block>
+
+</story>
+
+</document>

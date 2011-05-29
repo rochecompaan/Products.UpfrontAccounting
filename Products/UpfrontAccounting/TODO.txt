@@ -1,0 +1,78 @@
+* I removed the BalanceSheetSection and IncomeStatementSection fields
+from Account since these really belong on a configuration object.
+
+* Consider using a composite key with the date and transaction id for
+sorting transactions and transaction entries.
+
+* Icons for content types
+
+* It would be quite clever if the "Closing Transfers" form default to
+the next closing date automatically. If the last closing was on 28 Feb
+2006 then it should simply default to the end of Feb the next year.
+
+* Better error handling when importing CSV files eg. if reference cannot be
+found then it must be reported.
+
+* When importing, only show columns that match the schema. I did not
+notice for instance that my CSV file had a column titled
+TaxIncludedInCashbookEntries where the field id in the schema was
+TaxIncludedInCashBookEntries.
+
+* CreditNoteDate should be renamed to effectiveDate
+
+* use plone.folder for CashBookEntryFolder
+
+* use permissions consistently in security declarations.
+
+* when objects are deleted from an OrderedBTreeContainer they are not
+automatically removed from _positionIds map. Currently _delete is called
+by CashBookEntryFolder in removeEntryBalance.
+
+* remove getEntriesLastAccount, prevBalance, nextBalance, etc.
+
+* refactor all unit tests to use assertEqual instead of failUnless
+
+* use javascript check to guard against navigating away from form when
+importing files.
+
+* Set Default Sales, Sales Tax and Retained Income accounts.
+
+* Select Logo on Add form
+
+* Default Account Name to Organisation Name
+
+* Account Opened on, default to today. Strip away Time fields.
+
+* Auto generate account number.
+
+* Add/edit/post transaction in list view.
+
+* Reverse transaction does not copy title.
+
+* Show value in base currency on invoice AND invoice listing.
+
+* Ugly Title for invoice templates.
+
+* Bug on adding item to invoice template.
+
+* Export CSV on transactions gives error.
+
+* Automatic fetch new exchange rates.
+  Found the following sites/services:
+  - http://www.exchangerate-api.com/python
+  - http://www.exchangerate-api.com/supported-currencies
+  - http://www.xignite.com
+  - http://www.oanda.com/currency-data/
+  - http://www.xe.com
+  Technical suggestion:
+  - Create a facade for a selection of exchange rate web services.
+  - Basic API: 
+    get_exchange_rate?from=[from currency]&to=[to currency]&amount=[amount]
+    get_all_exchange_rates
+  - Results are persisted for 24 hours?
+
+* Get accounts on some of the other accounting systems in order to evaluate them.
+  - http://www.xero.com
+  - http://www.saasu.com
+  - http://www.kashflow.co.uk
+

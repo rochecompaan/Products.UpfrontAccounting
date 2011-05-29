@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<import-steps>
+
+ <import-step 
+    id="UpfrontAccounting-QI-dependencies" 
+    handler="Products.UpfrontAccounting.setuphandlers.installQIDependencies"
+    title="Dependend QI installables for UpfrontAccounting"
+    version="2010-12-04T12:21:17.427644">
+   Install quickinstaller dependencies for UpfrontAccounting
+ </import-step>
+ 
+ 
+
+
+ <import-step 
+    id="UpfrontAccounting-Update-RoleMappings" 
+    handler="Products.UpfrontAccounting.setuphandlers.updateRoleMappings"
+    title="Update Workflow role mappings for UpfrontAccounting"
+    version="2010-12-04T12:21:17.427644">
+   <dependency step="UpfrontAccounting-QI-dependencies"/>
+   updates the workflow role mappings for UpfrontAccounting
+ </import-step>
+
+ <import-step 
+    id="UpfrontAccounting-postInstall" 
+    handler="Products.UpfrontAccounting.setuphandlers.postInstall"
+    title="manual coded post-install for UpfrontAccounting"
+    version="2010-12-04T12:21:17.427644">
+   <dependency step="UpfrontAccounting-QI-dependencies"/>
+   manual coded post-install for UpfrontAccounting
+ </import-step>
+
+<!-- ##code-section ADDITIONALSTEPS -->
+ <import-step 
+    id="UpfrontAccounting-Hide-Types-From-Navigation" 
+    handler="Products.UpfrontAccounting.setuphandlers.setupHideMetaTypesFromNavigations"
+    title="Hide types from navigation for UpfrontAccounting"
+    version="2009-04-22T14:43:41.385620">
+   <dependency step="UpfrontAccounting-QI-dependencies"/>
+   Hides types from the navigation tree for UpfrontAccounting
+ </import-step>
+
+ <import-step 
+    id="UpfrontAccounting-Setup-Customized-AllowedContentTypes" 
+    handler="Products.UpfrontAccounting.setuphandlers.setupAllowedContentTypes"
+    title="Configure allowed_content_types for constrained content types for UpfrontAccounting"
+    version="2009-04-22T14:43:41.385620">
+   <dependency step="typeinfo"/>
+   Configure allowed_content_types for constrained content types for UpfrontAccounting
+ </import-step>
+
+ <import-step 
+    id="UpfrontAccounting-Setup-Catalog-Multiplex" 
+    handler="Products.UpfrontAccounting.setuphandlers.setupCatalogMultiplex"
+    title="Configure catalogs per content type for UpfrontAccounting"
+    version="2009-04-22T14:43:41.385620">
+   <dependency step="componentregistry"/>
+   Configure catalogs per content type for UpfrontAccounting
+ </import-step>
+
+<!-- ##/code-section ADDITIONALSTEPS -->
+
+</import-steps>
+ 

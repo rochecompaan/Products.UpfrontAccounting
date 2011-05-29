@@ -1,0 +1,179 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="upfrontaccounting">
+
+<head><title></title></head>
+
+<body>
+
+    <metal:body_macro metal:define-macro="body">
+
+    <script type="text/javascript" 
+        tal:define="view nocall:here/@@upfrontaccounting.account-autocomplete"
+        tal:content="structure view/items">
+    </script>
+
+
+    <form name="edit_form"
+            method="post"
+            enctype="multipart/form-data"
+            action=""
+            tal:attributes="action python:here.absolute_url()+'/'+template.id">
+
+        <input type="hidden" name="form.submitted" value="1" />
+
+        <metal:entries metal:define-macro="entries">
+        <div id="CashbookEntries"
+            tal:define="entries here/getPendingEntries;
+                        Batch python:modules['Products.CMFPlone'].Batch;
+                        b_size request/b_size | python:50;
+                        b_start request/form/b_start | request/b_start | python:len(entries)/50*50;
+                        lastpage request/form/lastpage | nothing;
+                        view_only view_only | nothing;
+                        batch python:Batch(entries, int(b_size), int(b_start), orphan=1);">
+            <div metal:use-macro="here/batch_macros/macros/navigation" />
+            <table
+                summary="Cashbook edit form"
+                class="grid"
+                cellpadding="0" cellspacing="0">
+
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Date</th>
+                        <th width="50px">Ref Nr</th>
+                        <th width="500px">Description</th>
+                        <th width="250px">Account</th>
+                        <th>Tax Included</th>
+                        <th width="100px">Amount</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tal:entries tal:repeat="entry batch">
+                        <tr class="entry" 
+                            tal:define="entry nocall:request/form/entry | nocall:entry;
+                                        listaccounts nocall:here/@@listaccounts"
+                            tal:attributes="entryId entry/getId;
+                                            id python:'entry-%s' % entry.getId()">
+                            <td>
+                                <img class="delentry" src="delete.png" 
+                                    tal:attributes="src string:${portal_url}/delete.png"
+                                    tal:condition="python:not view_only and not entry.isPosted()"/>
+                            </td>
+                            <td>
+                                <input tal:attributes="name string:entry.${entry/getId}.Date;
+                                                       id string:date_${entry/getId};
+                                                       value entry/getDate;
+                                                       fieldName string:Date;
+                                                       class string:datefield;
+                                                       entryId entry/getId;
+                                                       size string:10;
+                                                       maxlength string:10" />
+                                <input onclick='showJsCalendarInGrid("date_01")'
+                                    class="selectDateButton" type="button"
+                                    id="selectDateButton_01"
+                                    tal:attributes="id string:date_${entry/getId}_selectDateButton;
+                                                    onclick string:showJsCalendarInGrid('date_${entry/getId}')"
+                                    />
+                            </td>
+                            <td>
+                                <input tal:attributes="name string:entry.${entry/getId}.ReferenceNumber;
+                                                       value entry/getReferenceNumber;
+                                                       id string:referencenumber_${entry/getId};
+                                                       fieldName string:ReferenceNumber;
+                                                       class string:referencenumber"/>
+                            </td>
+                            <td>
+                                <input tal:attributes="name string:entry.${entry/getId}.description;
+                                                       value entry/Title;
+                                                       id string:description_${entry/getId};
+                                                       fieldName string:description;
+                                                       class string:description;
+                                                       size string:25"/>
+                            </td>
+                            <td tal:define="view here/@@upfrontaccounting.account-autocomplete;
+                                            account python:entry.getAccount();
+                                            entry_id entry/getId;
+                                            jsid python:str(entry_id).replace('.', '_');">
+                                <script type="text/javascript" tal:content="python:view.js('account_' + jsid)"></script>
+                                <input size="50" class="select-account"
+                                    tal:attributes="name string:entry.${entry/getId}.Account;
+                                                    fieldName string:Account;
+                                                    id string:account_${jsid};
+                                                    value account/Title|nothing"/>
+                            </td>
+                            <td>
+                                <metal:taxincluded define-macro="taxincluded">
+                                <input
+                                    type="checkbox"
+                                    tal:define="entry nocall:request/form/entry | nocall:entry;
+                                                taxincluded entry/getTaxIncluded"
+                                    tal:attributes="name string:entry.${entry/getId}.TaxIncluded;
+                                                    checked python:entry.getTaxIncluded() and 'checked' or None;
+                                                    fieldName string:TaxIncluded;
+                                                    id string:taxincluded_${entry/getId};"/>
+                                </metal:taxincluded>
+                            </td>
+                            <td class="amount">
+                                <metal:amount define-macro="amount">
+                                <input 
+                                    tal:define="entry nocall:request/form/entry | nocall:entry;
+                                                amount entry/getAmount"
+                                    tal:attributes="name string:entry.${entry/getId}.Amount;
+                                                    value python:amount and amount.amount() or '';
+                                                    fieldName string:Amount;
+                                                    id string:amount_${entry/getId};
+                                                    class string:amount"/>
+                                </metal:amount>
+                            </td>
+                            <td class="amount">
+                                <metal:balance define-macro="balance">
+                                <span
+                                    tal:define="entry nocall:request/form/entry | nocall:entry;
+                                                balance python:here.getBalanceForEntry(entry.getId())"
+                                    tal:attributes="name string:entry.${entry/getId}.Balance;
+                                                    id string:balance_${entry/getId};
+                                                    fieldName string:Balance;
+                                                    entryId entry/getId" 
+                                    tal:content="balance" />
+                                </metal:balance>
+                            </td>
+                        </tr>
+                    </tal:entries>
+                </tbody>
+
+            </table>
+
+            <div class="newline" tal:condition="python: batch.pagenumber == batch.numpages">
+                &nbsp;
+                <a id="addentry" i18n:translate="label_add_new_line">
+                    <img src="add.png" tal:attributes="src string:${portal_url}/add.png"/>&nbsp;Add New Line
+                </a>
+            </div>
+
+        </div>
+        </metal:entries>
+
+        <br/><br/>
+
+        <input class="context"
+            tabindex=""
+            type="submit"
+            name="form_submit"
+            value="Save"
+            i18n:attributes="value"
+            tal:attributes="tabindex tabindex/next"
+            />
+
+    </form>
+
+    </metal:body_macro>
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+a#addentry:click {
+    evt-click-preventdefault: true;
+    action-server: @@add_cashbook_entry;
+}
+
+img.delentry:click {
+    action-server: del_cashbook_entry;
+    del_cashbook_entry-entryId: nodeAttr('entryId', True);
+}
+
+.entry select:change,
+.entry input[type=checkbox]:click,
+.entry input:blur {
+    action-server: editField;
+    editField-entryId: nodeAttr('entryId', True);
+    editField-fieldName: nodeAttr('fieldName', True);
+    editField-kssSubmitForm: currentForm();
+}

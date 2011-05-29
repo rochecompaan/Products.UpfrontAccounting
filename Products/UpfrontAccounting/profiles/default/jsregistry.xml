@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<object name="portal_javascripts" meta_type="JavaScripts Registry">
+ <!-- EXAMPLE DEFINITION
+ <javascript cacheable="True"
+             compression="safe"
+             cookable="True"
+             enabled="True"
+             expression=""
+             id="myfancyscript.js"
+             inline="False"/>
+ -->
+
+ <!-- ##code-section jsregistry.xml -->
+ <javascript cacheable="True"
+             compression="safe"
+             cookable="True"
+             enabled="True"
+             expression="python: here.portal_type == 'CashBookEntryFolder'"
+             id="cashbook_calendar_formfield.js"
+             inline="False"/>
+
+ <javascript id="++resource++upfrontaccounting.autocomplete/jquery.autocomplete.min.js" 
+             cacheable="True"
+             compression="none"
+             cookable="True"
+             enabled="True"
+             expression=""
+             inline="False" />
+
+
+ <!-- ##/code-section jsregistry.xml -->
+
+</object>

@@ -1,0 +1,147 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="upfrontaccounting">
+
+<body>
+
+    <metal:body_macro metal:define-macro="body">
+
+        <script type="text/javascript" 
+            tal:define="view nocall:here/@@upfrontaccounting.account-autocomplete"
+            tal:content="structure view/items">
+        </script>
+
+        <form name="edit_form"
+            method="post"
+            enctype="multipart/form-data"
+            action=""
+            tal:attributes="action python:here.absolute_url()+'/'+template.id">
+
+            <input type="hidden" name="form.submitted" value="1" />
+
+            <table>
+                <tr>
+                    <td>
+                    <tal:quote define="field python:here.Schema().get('title')">
+                        <metal:fieldMacro use-macro="python:here.widget('title', mode='edit')" />
+                    </tal:quote>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                    <tal:quote define="field python:here.Schema().get('effectiveDate')">
+                        <metal:fieldMacro use-macro="python:here.widget('effectiveDate', mode='edit')" />
+                    </tal:quote>
+                    </td>
+                </tr>
+            </table>
+
+            <metal:entries metal:define-macro="entries">
+                <table
+                    id="TransactionTable"
+                    summary="Transaction edit form"
+                    class="grid"
+                    cellpadding="0" cellspacing="0">
+
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Account</th>
+                            <th class="amount" width="80px">Amount</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                        </tr>
+                    </thead>
+
+                    <tbody tal:define="transaction nocall:request/form/transaction | here"> 
+                        <tal:entries repeat="entry python:transaction.objectValues('TransactionEntry')">
+                        <metal:use metal:use-macro="here/transaction_edit/macros/transactionentry" />
+                        </tal:entries>
+                    </tbody>
+
+                </table>
+            </metal:entries>
+
+            <div class="newline">
+                &nbsp;<a id="addentry" i18n:translate="label_add_new_line"><img src="add.png" tal:attributes="src string:${portal_url}/add.png"/>&nbsp;Add New Line</a>
+            </div>
+
+            <br/><br/>
+
+            <input class="context"
+                    tabindex=""
+                    type="submit"
+                    name="form_submit"
+                    value="Save"
+                    i18n:attributes="value"
+                    tal:attributes="tabindex tabindex/next"
+                    />
+
+        </form>
+
+        </metal:body_macro>
+
+        <metal:account metal:define-macro="account">
+            <tal:account tal:define="view here/@@upfrontaccounting.account-autocomplete;
+                                     entry nocall:request/form/entry | entry;
+                                     account python:entry.getAccount()">
+            <script type="text/javascript" tal:content="python:view.js('account_' + entry.getId())"></script>
+            <input size="50" class="select-account"
+                tal:attributes="name string:entry.${entry/getId}.Account;
+                                fieldName string:Account;
+                                id string:account_${entry/getId};
+                                value account/Title|nothing"/>
+            </tal:account>
+        </metal:account>
+
+        <metal:amount metal:define-macro="amount">
+            <input tal:define="entry nocall:request/form/entry | entry;
+                               amount python:entry.getAmount()"
+                tal:attributes="name string:entry.${entry/getId}.Amount;
+                        value python:amount and amount.amount() or '';
+                        fieldName string:Amount;
+                        id string:amount_${entry/getId};
+                        class string:amount;"/>
+        </metal:amount>
+
+        <metal:transactionentry metal:define-macro="transactionentry">
+            <tr class="entry" 
+                tal:define="entry nocall:request/form/entry | entry;
+                    listaccounts nocall:here/@@listaccounts"
+                tal:attributes="entryId entry/getId;
+                            id python:'entry-%s' % entry.getId()">
+                <td><img class="delentry" src="delete.png" tal:attributes="src string:${portal_url}/delete.png"/></td>
+                <td>
+                    <metal:account metal:use-macro="here/transaction_edit/macros/account" />
+                </td>
+                <td>
+                    <metal:amount metal:use-macro="here/transaction_edit/macros/amount" />
+                </td>
+                <td>
+                    <tal:entrydef tal:define="entry nocall:request/form/entry | entry;">
+                    <input type="radio" value="Debit" class="debitcredit"
+                        tal:attributes="name string:entry.${entry/getId}.DebitCredit;
+                                id string:debit_${entry/getId};
+                                fieldName string:DebitCredit;
+                            checked python:entry.getDebitCredit() == 'Debit'"/>
+                    </tal:entrydef>
+                </td>
+                <td>
+                    <tal:entrydef tal:define="entry nocall:request/form/entry | entry;">
+                    <input type="radio" value="Credit" class="debitcredit"
+                        tal:attributes="name string:entry.${entry/getId}.DebitCredit;
+                                id string:credit_${entry/getId};
+                                fieldName string:DebitCredit;
+                            checked python:entry.getDebitCredit() == 'Credit'"/>
+                    </tal:entrydef>
+                </td>
+            </tr>
+        </metal:transactionentry>
+
+</body>
+
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<object name="AccountFolder"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone">
+   
+ <property name="title" i18n:translate="">Account Folder</property>
+ <property name="description" i18n:translate=""></property>
+ <property name="content_icon">AccountFolder.gif</property>
+ <property name="content_meta_type">AccountFolder</property>
+ <property name="product">UpfrontAccounting</property>
+ <property name="factory">addAccountFolder</property>
+ <property name="immediate_view">listaccountsview</property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+   <element value="Account"/>
+   <element value="SubsidiaryAccount"/>
+   <element value="CustomerAccount"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">listaccountsview</property>
+ <property name="view_methods">
+  <element value="listaccounts_alternative_view"/>
+  <element value="listaccountsview"/>
+ </property>
+ <property name="default_view_fallback">False</property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="view" to="(selected layout)"/>
+ <alias from="edit" to="base_edit"/>
+ <alias from="sharing" to="@@sharing"/>
+ <action title="CSV Export" 
+         i18n:attributes="title"
+         action_id="exportcsv"
+         category="document_actions" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/csvexporter?filter_date=${request/filter_date|python:DateTime().Date()}" 
+         visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="Accounts" 
+         i18n:attributes="title"
+         action_id="view"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/view" 
+         visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="edit" 
+         i18n:attributes="title"
+         action_id="edit"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/edit" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="metadata" 
+         i18n:attributes="title"
+         action_id="metadata"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/metadata" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="local_roles" 
+         i18n:attributes="title"
+         action_id="local_roles"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/local_roles" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="Import" 
+         i18n:attributes="title"
+         action_id="importcsv"
+         category="document_actions" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/csvimporter" 
+         visible="True">
+  <permission value="Modify Portal Content"/>
+ </action>
+</object>

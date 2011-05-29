@@ -1,0 +1,152 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone_accounting">
+
+<body>
+
+<metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border', 1)" />
+
+<div metal:fill-slot="main">
+
+<style>
+#archetypes-fieldname-DebtorAccount label,
+#archetypes-fieldname-DebtorAccount .fieldRequired {
+    display: none;
+}
+
+.existing {
+    font-weight: bold;
+    padding-right: 0.5em;
+}
+.new {
+    font-weight: bold;
+    color: green;
+}
+
+#new_customer h3 {
+    margin-top: 20px;
+    margin-bottom: 0px;
+    color: green;
+}
+
+</style>
+
+<script>
+    function showNewCustomer() {
+        div = document.getElementById('new_customer')
+        div.setAttribute('style', 'display: block')
+        div = document.getElementById('existing_customer')
+        div.setAttribute('style', 'display: none')
+    }
+
+    function showExistingCustomer() {
+        div = document.getElementById('existing_customer')
+        div.setAttribute('style', 'display: block')
+        div = document.getElementById('new_customer')
+        div.setAttribute('style', 'display: none')
+    }
+
+</script>
+
+<h1 i18n:translate="heading_create_quote">Create a quote</h1>
+
+<form tal:define="errors view/getErrors" 
+    action="."
+    method="post">
+
+<input type="hidden" name="form.submitted" value="1" />
+
+<div>
+For <input type="radio" name="customer_type" checked="checked"
+        value="existing" onclick="showExistingCustomer()">
+    <span class="existing">an existing customer</span> or
+    <input type="radio" name="customer_type" value="new"
+        onclick="showNewCustomer()">
+    <span class="new">a new customer</span>?
+</div>
+
+<div id="existing_customer" class="field">
+<tal:quote tal:define="here view/getQuote;">
+    <tal:account tal:define="field python:here.Schema().get('Customer')">
+        <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+    </tal:account>
+</tal:quote>
+</div>
+
+<div id="new_customer" class="field" style="display: none">
+
+<h3 i18n:translate="heading_customer_info"
+    >Enter the information for the new customer</h3>
+
+<tal:org tal:define="here view/getCustomer;
+    fieldnames python:('Name', 'TaxNumber', 'Email', 'Phone', 'Fax', 'Logo', 'BillingAddress');
+    ">
+
+    <tal:fields repeat="field python:[here.Schema().get(fieldName) for fieldName in fieldnames]">
+        <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+    </tal:fields>
+
+    <span tal:replace='structure string:<script type="text/javascript"><!--'/>
+        <!-- prefix inputs with 'Organisation' -->
+        <tal:block tal:repeat="fieldname fieldnames">
+        <span tal:replace="structure string:el = document.getElementById('${fieldname}')"/>
+        <span tal:replace="structure string:if (el) el.setAttribute('name', 'Organisation.${fieldname}:record');"/>
+        </tal:block>
+        document.getElementById('Logo_file').setAttribute('name', 'Organisation.Logo_file:record')
+    <span tal:replace="structure string:--></script>"/>
+
+</tal:org>
+
+<h3 i18n:translate="heading_customer_info"
+    >You must also enter at least one person for this company</h3>
+
+<tal:contact tal:define="here view/getPerson;
+    fieldnames python:('id', 'FirstName', 'LastName', 'email', 'BusinessPhone', 'MobilePhone');
+    ">
+
+    <tal:fields repeat="field python:[here.Schema().get(fieldName) for fieldName in fieldnames]">
+        <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+    </tal:fields>
+
+    <span tal:replace='structure string:<script type="text/javascript"><!--'/>
+        <!-- prefix inputs with 'Person' -->
+        <tal:block tal:repeat="fieldname fieldnames">
+        <span tal:replace="structure string:el = document.getElementById('${fieldname}')"/>
+        <span tal:replace="structure string:if (el) el.setAttribute('name', 'Person.${fieldname}:record');"/>
+        </tal:block>
+        id_div = document.getElementById('archetypes-fieldname-id')
+        for (el in id_div.getElementsByTagName('input')) {
+            if (el.name == 'id')
+                el.setAttribute('name', 'Person.id:record')
+        }
+    <span tal:replace="structure string:--></script>"/>
+
+</tal:contact>
+
+</div>
+
+<input class="context"
+        tabindex=""
+        type="submit"
+        name="createQuote:method"
+        value="Create quote"
+        i18n:attributes="value"
+        tal:attributes="tabindex tabindex/next"
+        />
+<input class="standalone"
+        tabindex=""
+        type="submit"
+        name="form.button.cancel"
+        value="Cancel"
+        i18n:attributes="value"
+        tal:attributes="tabindex tabindex/next"
+        />
+
+</form>
+
+</div>
+
+</body>
+</html>

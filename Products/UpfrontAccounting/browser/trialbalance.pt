@@ -1,0 +1,140 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="upfrontaccounting">
+
+<head>
+
+<metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border', 1)" />
+
+<metal:calendar fill-slot="javascript_head_slot">
+    <!-- ECMAScript calendar -->
+    <style type="text/css" media="all"
+        tal:content="string:@import url($portal_url/jscalendar/calendar-system.css);"></style>
+    <script type="text/javascript"
+        tal:attributes="src string:$portal_url/jscalendar/calendar_stripped.js"></script>
+    <script type="text/javascript" charset="iso-8859-1"
+        tal:condition="exists: portal/jscalendar/calendar-en.js"
+        tal:attributes="src string:$portal_url/jscalendar/calendar-en.js"></script>
+</metal:calendar>
+
+</head>
+
+<body>
+
+    <div metal:fill-slot="main">
+
+        <tal:select_date tal:condition="not:request/submit|nothing">
+
+        <h1 i18n:translate="label_trial_balance"
+            class="documentFirstHeading">
+            Trial Balance
+        </h1>
+
+        <form name="trial_balance" method="post"
+            tal:attributes="action string:${here/absolute_url}/${view/name}">
+            <div class="field">
+
+                <label for="trial_balance_date"
+                    i18n:translate="label_trial_balance_date">Date for
+                    trial balance</label>
+                <br/>
+
+                <tal:define define="
+                    id string:trial_balance_date;
+                    inputname id;
+                    show_hm python:False;
+                    formname string:trial_balance;
+                    value request/trial_balance_date | view/default_date;
+                    inputvalue value">
+                <metal:use use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                    a calendar, hopefully
+                </metal:use>
+                </tal:define>
+            </div>
+
+            <div class="field">
+                <input tabindex=""
+                    class="standalone"
+                    type="submit"
+                    name="submit"
+                    value="Submit"
+                    i18n:attributes="value"
+                    />                       
+            </div>
+
+        </form>
+        </tal:select_date>
+
+        <tal:balances tal:condition="request/submit|nothing">
+
+        <h1 i18n:translate="label_trial_balance_for_date"
+            class="documentFirstHeading">
+            Trial Balance for 
+            <span i18n:name="trial_balance_date" tal:content="view/trial_balance_date_formatted">28 Feb 2009</span>
+        </h1>
+
+
+            <table class="listing nosort">
+                <thead>
+                    <tr>
+                        <th>&nbsp;<tal:title i18n:translate="listingheader_title"
+                            >Title</tal:title>&nbsp;</th>
+                        <th>&nbsp;<tal:size i18n:translate="listingheader_accountnumber"
+                            >Account Number</tal:size>&nbsp;</th>
+                        <th width="100px">&nbsp;<tal:state i18n:translate="listingheader_balance"
+                            >Debit</tal:state>&nbsp;</th>
+                        <th width="100px">&nbsp;<tal:state i18n:translate="listingheader_balance"
+                            >Credit</tal:state>&nbsp;</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tal:items tal:repeat="accountdict view/accounts">
+                    <tr tal:define="oddrow repeat/accountdict/odd;
+                                    account nocall:accountdict/obj;
+                                    path accountdict/path;
+                                    relative_url accountdict/relative_url;
+                                    balance accountdict/balance;
+                                    isdebit accountdict/isdebit;
+                                    iscredit accountdict/iscredit"
+                        tal:attributes="class python:oddrow and 'odd' or 'even';
+                                        id string:folder-contents-item-${account/getId};" >
+                        <td>
+                            <a href="#" tal:attributes="href account/absolute_url;
+                                                        title account/title_or_id">
+                                <strong tal:content="account/title_or_id"/>
+                            </a>
+                        </td>
+
+                        <td style="text-align: center"
+                            tal:content="account/getAccountNumber">
+                            A000001
+                        </td>
+                        <td style="text-align: right; white-space: nowrap">
+                            <span tal:condition="isdebit"
+                                  tal:content="balance">
+                                R 100.00
+                            </span>
+                        </td>
+                        <td style="text-align: right; white-space: nowrap">
+                            <span tal:condition="iscredit"
+                                  tal:content="balance">
+                                R 100.00
+                            </span>
+                        </td>
+                    </tr>
+                    </tal:items>
+                </tbody>
+            </table>
+        </tal:balances>
+
+    </div>
+
+</body>
+
+</html>

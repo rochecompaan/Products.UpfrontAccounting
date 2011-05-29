@@ -1,0 +1,23 @@
+/* <dtml-var "enableHTTPCompression(request=REQUEST, debug=1, css=1)"> */
+/* <dtml-with base_properties> */
+/* <dtml-call "REQUEST.set('portal_url', portal_url())"> */
+
+table.import tr:hover {
+    background: &dtml-globalBackgroundColor;;
+}
+
+.negative {
+    color: red;
+}
+.positive {
+    color: blue;
+}
+.Account {
+    white-space: nowrap;
+}
+.Amount {
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* </dtml-with> */

@@ -1,0 +1,144 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five">
+
+    <!-- cashbook -->
+
+    <browser:resource
+        file="cashbook.kss"
+        name="upfrontaccounting.cashbook.kss"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.ICashBookEntryFolder"
+        class=".cashbook.CashbookView"
+        attribute="addEntry"
+        name="add_cashbook_entry"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.ICashBookEntryFolder"
+        class=".cashbook.CashbookView"
+        attribute="delEntry"
+        name="del_cashbook_entry"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.ICashBookEntryFolder"
+        class=".cashbook.CashbookView"
+        attribute="editField"
+        name="editField"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <!-- invoice -->
+
+    <browser:resource
+        file="invoice.kss"
+        name="upfrontaccounting.invoice.kss"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.IInvoice"
+        class=".invoice.InvoiceItemsView"
+        attribute="editInvoiceCurrency"
+        name="edit_invoice_currency"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.IInvoice"
+        class=".invoice.InvoiceItemsView"
+        attribute="addItem"
+        name="add_invoice_item"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.IInvoice"
+        class=".invoice.InvoiceItemsView"
+        attribute="delItem"
+        name="del_invoice_item"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.IInvoice"
+        class=".invoice.InvoiceItemsView"
+        attribute="editItem"
+        name="edit_invoice_item"
+        permission="cmf.ModifyPortalContent"
+        />
+
+
+    <!-- transaction -->
+
+    <browser:resource
+        file="transaction.kss"
+        name="upfrontaccounting.transaction.kss"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.ITransaction"
+        class=".transaction.TransactionView"
+        attribute="editTransaction"
+        name="edit_transaction"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.ITransaction"
+        class=".transaction.TransactionView"
+        attribute="addEntry"
+        name="add_transaction_entry"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.ITransaction"
+        class=".transaction.TransactionView"
+        attribute="delEntry"
+        name="del_transaction_entry"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.ITransaction"
+        class=".transaction.TransactionView"
+        attribute="editField"
+        name="editField"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <!-- quote -->
+
+    <!-- uses invoice.kss -->
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.IQuote"
+        class=".quote.QuoteItemsView"
+        attribute="addItem"
+        name="add_invoice_item"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.IQuote"
+        class=".quote.QuoteItemsView"
+        attribute="delItem"
+        name="del_invoice_item"
+        permission="cmf.ModifyPortalContent"
+        />
+
+    <browser:page
+        for="Products.UpfrontAccounting.content.interfaces.IQuote"
+        class=".quote.QuoteItemsView"
+        attribute="editItem"
+        name="edit_invoice_item"
+        permission="cmf.ModifyPortalContent"
+        />
+
+
+</configure>

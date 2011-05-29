@@ -1,0 +1,388 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone_accounting">
+
+<body>
+
+<metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border', 1)" />
+
+<div metal:fill-slot="main">
+<div metal:define-macro="main" tal:omit-tag="">
+
+<tal:status define="status view/update"/>
+
+<tal:upload_file condition="not:request/importstatement|nothing">
+
+    <h1 i18n:translate="heading_import_statement">Import statement</h1>
+
+    <p>
+    The import statement wizard helps you to import a statement into the
+    cashbook.
+    </p>
+        
+    <h4 i18n:translate="heading_import_statement_step_one"
+        >Step 1: Upload file</h4>
+
+    <form name="form" action="." method="post" enctype="multipart/form-data"
+            tal:attributes="action string:${here/absolute_url}/importstatement ">
+
+      <input name="importstatement" type="hidden" value="1"/>
+
+      <div class="field">
+      <div i18n:translate="select_file">Select file</div>
+          <input type="file" name="statement_csv_file" size="50"/>
+      </div>
+
+      <div class="field">
+          <label for="removeheader" i18n:translate="removeheader">First row contains field names?</label>
+          <br/>
+          <input type="radio" name="removeheader" value="yes" > Yes
+          <input type="radio" name="removeheader" value="no" > No
+      </div>
+
+      <input class="context"
+          type="submit"
+          value="Next"
+          name="selectformat"
+          i18n:attributes="value"
+          tabindex=""
+          tal:attributes="tabindex tabindex/next;"
+          />
+
+    </form>
+
+</tal:upload_file>
+
+<tal:selectformat tal:condition="request/selectformat|nothing">
+
+    <h1 i18n:translate="heading_import_statement">Import statement</h1>
+
+    <h4 i18n:translate="define_data_format">Step 2: Define data format</h4>
+    
+    <p i18n:translate="define_data_intro">
+    Specify the format of your CSV file in the form below
+    </p>
+
+    <form name="form" action="." method="post" enctype="multipart/form-data"
+            tal:attributes="action string:${here/absolute_url}/importstatement">
+
+      <input name="importstatement" type="hidden" value="1"/>
+
+      <fieldset>
+
+          <div class="field">
+              <label for="delimiter" i18n:translate="field_seperator"
+                  >Field seperator/delimiter:</label>
+              <br/>
+
+              <select name="delimiter">
+                  <option value="asterisk" i18n:translate="">Asterisk</option>
+                  <option value="comma" selected="selected" i18n:translate="">Comma</option>
+                  <option value="colon" i18n:translate="">Colon</option>
+                  <option value="semicolon" i18n:translate="">Semicolon</option>
+                  <option value="space" i18n:translate="">Space</option>
+                  <option value="tab" i18n:translate="">Tab</option>
+              </select>
+          </div>
+
+          <div class="field">
+              <label for="quote_char" i18n:translate="text_seperator"
+                  >Text seperator/quote character:</label>
+              <br/>
+              <select name="quote_char">
+                  <option value="double_quote">"</option>
+                  <option value="single_quote">'</option>
+              </select>
+          </div>
+
+          <div class="field">
+              <label for="encoding" i18n:translate="charset">Encoding/charset:</label>
+              <br/>
+              <input name="encoding" value="utf-8">
+          </div>
+
+          <div class="field">
+              <label for="dateformat" i18n:translate="dateformat">Format of the date column (eg. CCYY-MM-DD):</label>
+              <br/>
+              <input name="dateformat" value="CCYY-MM-DD">
+          </div>
+
+          <div class="submit">
+              <input class="context"
+                      type="submit"
+                      value="Next"
+                      name="mapfields"
+                      i18n:attributes="value"
+                      tabindex=""
+                      tal:attributes="tabindex tabindex/next;"
+                      />
+          </div>
+
+      </fieldset>
+
+    </form>
+
+</tal:selectformat>
+
+<tal:mapfields tal:condition="request/mapfields|nothing">
+
+    <tal:rows tal:define="rows view/get_rows_sample;
+                          headers view/get_headers">
+
+    <h1 i18n:translate="heading_import_statement">Import statement</h1>
+
+    <h4 i18n:translate="heading_map_fields">Step 3: Map data fields</h4>
+
+    <form name="form" action="." method="post"
+            tal:attributes="action string:${here/absolute_url}/importstatement">
+
+        <input name="importstatement" type="hidden" value="1"/>
+        <input type="hidden" name="quote_char" tal:attributes="value request/quote_char">
+        <input type="hidden" name="delimiter" tal:attributes="value request/delimiter">
+        <input type="hidden" name="encoding" tal:attributes="value request/encoding">
+        <input type="hidden" name="dateformat" tal:attributes="value request/dateformat">
+        <input type="hidden" name="n_fields:int" 
+                tal:attributes="value python:len(rows[0])"
+                tal:condition="rows">
+
+        <div style="width: 500px;" i18n:translate="map_fields_intro">
+        
+        Here you must define how columns are mapped to cashbook fields.<br/>
+        
+        If there is no sensible field to map a column to, it can be 
+        discarded.<br/>
+        
+        <br/>
+        
+        </div>
+        <br/>
+        <div tal:condition="not:rows">
+        <b i18n:translate="missing_file">Missing or empty file</b>
+        </div>
+
+        <table border="1" cellspacing="0" cellpadding="4"
+                tal:condition="rows"
+                tal:define="headerset view/headerSet; ">
+            <tr align="left" valign="top">
+                <td tal:repeat="cell python:rows[0]">
+                    <select tal:condition="headers"
+                        tal:define="idx repeat/cell/index"
+                        tal:attributes="name string:fields_map.${repeat/cell/index}:record;">
+                        <tal:loop repeat="header headerset"
+                                  define="selectedIndex python:view.selectedIndex(headers, idx);">
+                            <option tal:condition="python:selectedIndex!=repeat['header'].index"
+                                    tal:attributes="value header"
+                                    tal:content="header"/>
+                            <option tal:condition="python:selectedIndex==repeat['header'].index"
+                                    tal:attributes="value header; 
+                                                    selected string:'1'"
+                                    tal:content="python:view.capitalize(header)"/>
+                        </tal:loop>
+                    </select>
+                    <select tal:condition="not:headers"
+                        tal:attributes="name string:fields_map.${repeat/cell/index}:record;">
+                        <tal:loop repeat="header headerset">
+                            <option 
+                                    tal:attributes="value header"
+                                    tal:content="header"/>
+                        </tal:loop>
+                    </select>
+                </td>
+            </tr>
+            <tr align="left" valign="top"
+                tal:repeat="row rows">
+                <td tal:repeat="cell row"
+                    tal:content="cell">
+                    cell
+                </td>
+            </tr>
+        </table>
+
+        <br/>
+        <div class="submit" tal:condition="rows">
+            <br/>
+            <input class="context"
+                    type="submit"
+                    value="Next"
+                    name="selectaccounts"
+                    i18n:attributes="value"
+                    tabindex=""
+                    tal:attributes="tabindex tabindex/next;"
+                    />
+
+            <input type="hidden" name="current_path"
+                tal:attributes="value python:'/'.join(here.getPhysicalPath())">
+
+        </div>
+
+    </form>
+
+    </tal:rows>
+
+</tal:mapfields>
+
+<tal:selectaccounts tal:condition="request/selectaccounts|nothing">
+
+    <tal:block tal:define="fields_map request/fields_map; rows view/get_rows">
+
+    <script type="text/javascript" src="cashbookbatch.js">
+    </script>
+
+    <script type="text/javascript" 
+        tal:define="auto nocall:here/@@upfrontaccounting.account-autocomplete"
+        tal:content="structure auto/items">
+    </script>
+
+    <style type="text/css">
+        /* we need the work space - hide slots */
+        #portal-column-one,
+        #portal-column-two {
+            display: none;
+        }
+    </style>
+
+    <h1 i18n:translate="heading_import_statement">Import statement</h1>
+
+    <h4 i18n:translate="heading_select_accounts">Step 3: Select accounts</h4>
+
+    <form name="form" action="." method="post"
+            tal:attributes="action string:${here/absolute_url}/importstatement">
+
+        <input name="importstatement" type="hidden" value="1"/>
+
+        <div i18n:translate="select_accounts_intro">
+        
+        <p>
+        Select the account that each transaction should be written to.
+        </p>
+
+        <p>
+        If there is no sensible account to select, you can leave it
+        empty and it will be discarded.
+        </p>
+
+        <p>
+        If you fill in text in the column named "Remember", the
+        description will be remembered and used to automatically
+        associate the entry with the selected account. For example, fill
+        in "SERVICE FEE" and select the "Bank Charges" account if you
+        want to automatically associate entries containing "SERVICE FEE"
+        with the "Bank Charges" account in future. Only choose text that
+        will uniquely identify the entry. Choosing a word that is
+        common, like debit or credit, will cause bad matches.
+        </p>
+
+        <p>
+            The following phrases will be stripped from the description:
+            <tal:quote define="field python:here.Schema().get('StripPhrasesFromImport')">
+              <metal:fieldMacro use-macro="python:here.widget('StripPhrasesFromImport', mode='view')" />
+            </tal:quote>
+        </p>
+        </div>
+
+        <br />
+
+        <table class="import" border="1" cellspacing="0" cellpadding="4"
+                tal:condition="rows">
+
+            <tr>
+                <tal:fieldname tal:repeat="index python:range(len(rows[0]))">
+                <th tal:define="fieldname python:fields_map[str(index)]"
+                    tal:condition="python: fieldname != 'Discard Field'"
+                    tal:content="fieldname">
+                </th>
+                </tal:fieldname>
+                <th i18n:translate="label_account">Account</th>
+                <th i18n:translate="label_remember">Remember</th>
+            </tr>
+
+            <tr align="left" valign="top" tal:repeat="row rows">
+                <tal:record tal:define="record_id string:cashbookentry.${repeat/row/index}">
+                <tal:cell tal:repeat="cell row">
+                <tal:fieldname 
+                    on-error="string: Not enough values in row ${repeat/row/index}" 
+                    tal:define="fieldname python:request.fields_map[str(repeat['cell'].index)]"
+                    tal:condition="python: fieldname != 'Discard Field'"
+                    >
+                <td tal:condition="python: fieldname != 'Discard Field'"
+                    tal:attributes="class fieldname">
+
+                    <tal:block tal:condition="python:fieldname == 'description'">
+                    <input type="text" size="60"
+                        tal:attributes="name string:${record_id}.${fieldname}:record;
+                                        value cell"/>
+                    </tal:block>
+
+                    <tal:block tal:condition="python:fieldname != 'description'">
+                    <tal:amount tal:condition="python:fieldname == 'Amount'">
+                        <span tal:content="cell"
+                            tal:attributes="class python:cell.startswith('-') and 'negative' or 'positive'"/>
+                    </tal:amount>
+                    <tal:notamount tal:condition="python: fieldname != 'Amount'">
+                        <span tal:content="cell"/>
+                    </tal:notamount>
+                    <input type="hidden" 
+                        tal:attributes="name string:${record_id}.${fieldname}:record;
+                                        value cell"/>
+                    </tal:block>
+
+                </td>
+                </tal:fieldname>
+                </tal:cell>
+                <td class="Account" 
+                    tal:define="
+                    result python:view.guess_account_descriptions(row, request.fields_map);
+                    account_title python:result[1];
+                    auto here/@@upfrontaccounting.account-autocomplete;
+                    ">
+                    <script type="text/javascript" 
+                        tal:define="idrecid python:str(record_id).replace('.', '_');"
+                        tal:content="python:auto.js('account_' + idrecid)">
+                    </script>
+                    <input size="50" class="select-account"
+                        tal:define="idrecid python:str(record_id).replace('.', '_');"
+                        tal:attributes="name string:${record_id}.Account:record;
+                                        fieldName string:Account;
+                                        id string:account_${idrecid};
+                                        value account_title|nothing"/>
+                </td>
+                <td><input type="text" size="40"
+                    tal:attributes="name string:${record_id}.RememberDescription:record:ignore_empty">
+                </td>
+                </tal:record>
+            </tr>
+        </table>
+
+
+        <br/>
+        <div tal:condition="not:rows">
+        <b i18n:translate="missing_file">Missing or empty file</b>
+        </div>
+
+
+        <br/>
+        <div class="submit" tal:condition="rows">
+            <br/>
+            <input class="context"
+                    type="submit"
+                    value="Import"
+                    name="import"
+                    i18n:attributes="value"
+                    tabindex=""
+                    tal:attributes="tabindex tabindex/next;"
+                    />
+
+        </div>
+
+    </form>
+
+    </tal:block>
+
+</tal:selectaccounts>
+
+</div>
+</div>
+</body>
+</html>

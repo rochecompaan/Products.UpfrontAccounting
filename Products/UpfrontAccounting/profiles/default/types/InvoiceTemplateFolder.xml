@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<object name="InvoiceTemplateFolder"
+        meta_type="Factory-based Type Information with dynamic views"
+        xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="plone">
+   
+ <property name="title" i18n:translate="">Invoice Template Folder</property>
+ <property name="description" i18n:translate=""></property>
+ <property name="content_icon">InvoiceTemplateFolder.gif</property>
+ <property name="content_meta_type">InvoiceTemplateFolder</property>
+ <property name="product">UpfrontAccounting</property>
+ <property name="factory">addInvoiceTemplateFolder</property>
+ <property name="immediate_view">listinvoicetemplates</property>
+ <property name="global_allow">False</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+   <element value="InvoiceTemplate"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">listinvoicetemplates</property>
+ <property name="view_methods">
+  <element value="folder_summary_view"/>
+  <element value="folder_tabular_view"/>
+  <element value="atct_album_view"/>
+  <element value="folder_listing"/>
+  <element value="listinvoicetemplates"/>
+ </property>
+ <property name="default_view_fallback">False</property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="view" to="(selected layout)"/>
+ <alias from="edit" to="base_edit"/>
+ <alias from="sharing" to="@@sharing"/>
+ <action title="Invoice Templates" 
+         i18n:attributes="title"
+         action_id="view"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/listinvoicetemplates" 
+         visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="edit" 
+         i18n:attributes="title"
+         action_id="edit"
+         category="object" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/edit" 
+         visible="False">
+  <permission value="View"/>
+ </action>
+ <action title="Import" 
+         i18n:attributes="title"
+         action_id="import"
+         category="document_actions" 
+         condition_expr="python:1"
+         url_expr="string:${object_url}/invoicetemplateimporter" 
+         visible="True">
+  <permission value="ModifyPortalContent"/>
+ </action>
+</object>

@@ -1,0 +1,27 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+  <subscriber
+      for=".content.interfaces.IInvoice
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".wfsubscribers.postInvoice"
+  />
+  <subscriber
+      for=".content.interfaces.ICreditNote
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".wfsubscribers.postCreditNote"
+  />
+  <subscriber
+      for=".content.interfaces.ITransaction
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".wfsubscribers.undoTransaction"
+  />
+  <subscriber
+      for=".content.interfaces.ICashBookEntry
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".wfsubscribers.postCashbookEntryToAccount"
+  />
+  <subscriber
+      for=".content.interfaces.ITransaction
+           Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+      handler=".wfsubscribers.postTransaction"
+  />
+</configure>

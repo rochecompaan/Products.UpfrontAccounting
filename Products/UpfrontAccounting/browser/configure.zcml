@@ -1,0 +1,375 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five">
+
+  <include package=".kss" />
+
+  <browser:page
+      for="*"
+      name="accounttotal"
+      class=".utils.AccountTotal"
+      attribute="total"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="debit-total"
+      class=".utils.AccountTotal"
+      attribute="debit_total"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="credit-total"
+      class=".utils.AccountTotal"
+      attribute="credit_total"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="zeromoneyinstance"
+      class=".utils.ZeroMoneyInstance"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="wrap_text"
+      class=".utils.WrapText"
+      attribute="wrap_text"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      class=".utils.ListAccounts"
+      attribute="list"
+      name="listaccounts"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      class=".utils.FolderButtons"
+      attribute="buttons"
+      name="folder_buttons"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      class=".utils.OrganisationLogo"
+      attribute="logo"
+      name="pdf-logo"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="*"
+      class=".utils.OrganisationLogo"
+      attribute="width"
+      name="pdf-logo-width"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="*"
+      class=".utils.OrganisationLogo"
+      attribute="height"
+      name="pdf-logo-height"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.IAccountFolder"
+      class=".listaccounts.ListAccountsView"
+      name="listaccountsview"
+      template="listaccounts.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.IAccountFolder"
+      class=".listaccounts.ListAccountsView"
+      name="listaccounts_alternative_view"
+      template="listaccounts_alternative.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.ITransactionFolder"
+      class=".listtransactions.ListTransactionsView"
+      name="listtransactions"
+      template="listtransactions.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.ICreditNoteFolder"
+      class=".listcreditnotes.ListCreditNotesView"
+      name="listcreditnotes"
+      template="listcreditnotes.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="csvimporter"
+      class=".csvimporter.CSVImporter"
+      template="csvimporter.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="*"
+      name="import-progress"
+      template="importprogress.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="transactionimporter"
+      class=".transactionimporter.TransactionImporter"
+      template="csvimporter.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="*"
+      name="invoiceimporter"
+      class=".invoiceimporter.InvoiceImporter"
+      template="csvimporter.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="*"
+      name="invoicetemplateimporter"
+      class=".invoicetemplateimporter.InvoiceTemplateImporter"
+      template="csvimporter.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="*"
+      name="cashbookimporter"
+      class=".cashbookimporter.CashBookImporter"
+      template="csvimporter.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.ICashBook"
+      name="importstatement"
+      class=".importstatement.ImportStatement"
+      template="importstatement.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="*"
+      name="csvexporter"
+      class=".csvexporter.CSVExporter"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.IAccount"
+      name="transaction-exporter"
+      class=".account_transaction_exporter.AccountTransactionExporter"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.IAccountingFolder"
+      name="closing-transfers"
+      class=".closing.ClosingTransfers"
+      template="closing.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.IAccountingFolder"
+      name="trialbalance"
+      class=".trialbalance.TrialBalance"
+      template="trialbalance.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="addAccountingFolder"
+      for="*"
+      class=".adding.AccountingFolderAddForm"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="*"
+      name="send_invoice_mail"
+      attribute="send_invoice_mail"
+      class=".mail.MailObjects"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="send_invoice_mails"
+      attribute="send_invoice_mails"
+      class=".mail.MailObjects"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="send_statement_mail"
+      attribute="send_statement_mail"
+      class=".mail.MailObjects"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="send_statement_mails"
+      attribute="send_statement_mails"
+      class=".mail.MailObjects"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="..content.interfaces.ITransaction"
+      name="reverse_transaction"
+      attribute="reverse_transaction"
+      class=".transaction.Transaction"
+      permission="zope2.View"
+      />
+
+  <utility
+      provides="zope.schema.interfaces.IVocabularyFactory"
+      component=".utils.DefaultAccountVocabularyFactory"
+      name="account_vocabulary"
+      />
+
+  <utility
+      provides="zope.schema.interfaces.IVocabularyFactory"
+      component=".utils.TransactionEntryAccountVocabularyFactory"
+      name="tentry_account_vocabulary"
+      />
+
+  <utility
+      provides="zope.schema.interfaces.IVocabularyFactory"
+      component=".utils.CustomerAccountVocabularyFactory"
+      name="custaccount_vocabulary"
+      />
+
+  <utility
+      provides="zope.schema.interfaces.IVocabularyFactory"
+      component=".utils.CustomerAccountVocabularyFactory"
+      name="cb_entry_account_vocabulary"
+      />
+
+  <browser:resourceDirectory
+      name="upfrontaccounting.autocomplete"
+      directory="jquery-autocomplete"
+      />
+
+  <browser:page
+      for="*"
+      class=".utils.AccountAutoComplete"
+      allowed_interface=".utils.IAccountAutoComplete"
+      name="upfrontaccounting.account-autocomplete"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.IAccount"
+      class=".listaccounttransactions.ListAccountTransactionsView"
+      name="account_transactions"
+      template="account_transactions.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.ICustomerAccount"
+      class=".listaccounttransactions.ListAccountTransactionsView"
+      name="account_transactions"
+      template="account_transactions.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.ISubsidiaryAccount"
+      class=".listaccounttransactions.ListAccountTransactionsView"
+      name="account_transactions"
+      template="account_transactions.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="..content.interfaces.ITransaction"
+      name="transaction_view"
+      class=".transaction.TransactionView"
+      template="transaction_view.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="..content.interfaces.IInvoiceFolder"
+      name="folder_contents"
+      class=".invoicefolder.InvoiceFolderView"
+      template="invoicefolder_invoices.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="..content.interfaces.IInvoiceFolder"
+      name="recurringinvoices"
+      class=".recurringinvoices.RecurringInvoices"
+      template="recurringinvoices.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="..content.interfaces.IInvoiceTemplateFolder"
+      name="listinvoicetemplates"
+      class=".listinvoicetemplates.ListInvoiceTemplatesView"
+      template="listinvoicetemplates.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="..content.interfaces.IQuoteFolder"
+      name="createObject"
+      class=".quotefolder.CreateQuoteView"
+      attribute="createObject"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="..content.interfaces.IQuoteFolder"
+      name="quote_add"
+      class=".quotefolder.CreateQuoteView"
+      template="add_quote.pt"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="..content.interfaces.IQuoteFolder"
+      name="createQuote"
+      class=".quotefolder.CreateQuoteView"
+      attribute="createQuote"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <browser:page
+      for="Products.UpfrontAccounting.content.interfaces.ICashBook"
+      name="cashbook-exporter"
+      class=".cashbook_exporter.CashbookExporter"
+      permission="zope2.View"
+      />
+
+</configure>
+

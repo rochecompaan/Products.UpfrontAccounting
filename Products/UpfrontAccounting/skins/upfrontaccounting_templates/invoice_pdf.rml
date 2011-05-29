@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
+<!DOCTYPE document SYSTEM "rml_1_0.dtd">
+<document filename="invoice.pdf"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    tal:attributes="filename string:${here/getId}.pdf"
+    tal:define="wrap_text nocall:here/@@wrap_text">
+
+<template 
+    pageSize="21cm,29.7cm" 
+    landscape="0" 
+    showBoundary="0"
+    leftMargin="1cm"
+    rightMargin="1cm"
+    topMargin="1cm"
+    bottomMargin="1cm"
+    allowSplitting="1">
+
+<metal:stylesheet metal:use-macro="here/stylesheet/macros/stylesheet"/>
+
+<pageTemplate id="FirstPage">
+
+   <pageGraphics
+     tal:define="root python:here.getAccountingRoot()">
+
+       <tal:hasLogo tal:condition="root/getLogo">
+        <image file="#" x="10.2cm" y="26cm"
+            tal:attributes="file string:${root/absolute_url}/@@pdf-logo;
+                            width python:root.restrictedTraverse('@@pdf-logo-width')();
+                            height python:root.restrictedTraverse('@@pdf-logo-height')()" 
+            />
+       </tal:hasLogo>
+
+   </pageGraphics>       
+
+   <frame  id="CustomerDetail"
+           x1="1.5cm" 
+           y1="21cm" 
+           width="9cm" 
+           height="7cm"
+           />
+
+   <frame  id="OrganisationDetail"
+           x1="10cm" 
+           y1="22cm" 
+           width="8cm" 
+           height="4cm"
+           />
+
+   <frame  id="content"
+           x1="2cm"
+           y1="2cm"
+           width="17cm"
+           height="20cm"
+           />
+
+</pageTemplate>
+
+<pageTemplate id="Page">
+   <frame  id="content"
+           x1="2cm"
+           y1="0cm"
+           width="17cm"
+           height="28cm"
+           showBoundary="1"
+           />
+</pageTemplate>
+
+</template>
+
+<story tal:define="html_quote python:modules['Products.PythonScripts.standard'].html_quote">
+    <tal:block define="customer python:here.getCustomerAccount()">
+    <para style="InvoiceHeading">
+    Invoice Nr: <span tal:replace="here/getId"/>
+    </para>
+
+    <para style="Heading2">
+    <span tal:replace="python:html_quote(customer.Title())"/>
+    </para>
+
+    <para style="Heading2">
+    <span tal:replace="python:here.getInvoiceDate().strftime('%d %B %Y')"/>
+    </para>
+
+    <para style="Normal" tal:condition="customer/getTaxNumber">
+    Your VAT Number: <span tal:replace="python:customer.getTaxNumber()"/>
+    </para>
+
+    <pre style="Normal"><span tal:replace="structure python:here.get_billing_address(customer, outerJoin='\n')"/></pre>
+    </tal:block>
+
+    <para style="Normal">
+    <span tal:replace="python:here.getNotes()"/>
+    </para>
+
+    <nextFrame/>
+
+    <tal:block define="root python:here.getAccountingRoot()">
+
+    <para>
+    <b>VAT Number: <span tal:replace="python:root.getTaxNumber()"/>
+    </b>
+    </para>
+
+    <para>
+    <span tal:replace="structure python:here.get_billing_address(root, outerJoin=', ')"/>
+    </para>
+
+    <para>
+    <b>Tel: </b><span tal:replace="root/getPhone">+27 21 888 8888</span>
+    <span tal:condition="root/getFax">
+      <b>Fax: </b><span tal:replace="root/getFax">+27 21 888 8888</span>
+    </span>
+    </para>
+
+    </tal:block>
+
+    <nextFrame/>
+
+    <blockTable style="StandardTable"
+        colWidths="8.5cm,2.5cm,2.5cm,2.5cm,2.5cm"
+        >
+
+    <tr>
+    <td i18n:translate="label_description">Description</td>
+    <td i18n:translate="label_unit">Unit</td>
+    <td i18n:translate="label_quantity">Quantity</td>
+    <td i18n:translate="label_price">Price</td>
+    <td i18n:translate="label_total">Total</td>
+    </tr>
+
+    <tr tal:repeat="item here/objectValues">
+    <td tal:content="python:wrap_text(item.Description(), 60)">Description</td>
+    <td tal:content="item/getUnit">hour</td>
+    <td tal:content="item/getQuantity">10.00</td>
+    <td tal:content="item/getRate">R 10.00</td>
+    <td tal:content="item/getTotal">R 100.00</td>
+    </tr>
+
+    <tr>
+    <td i18n:translate="label_subtotal">Subtotal</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td tal:content="here/getSubTotal">R100.00</td>
+    </tr>
+    <tr>
+    <td i18n:translate="label_tax">Value Added Tax</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td tal:content="here/getTaxAmount">R100.00</td>
+    </tr>
+    <tr>
+    <td i18n:translate="label_total">Total</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td tal:content="here/getTotal">R100.00</td>
+    </tr>
+    </blockTable>
+
+    <spacer length="10"/>
+
+    <para style="Normal">
+    Invoice payable upon receipt
+    </para>
+
+    <spacer length="5"/>
+
+    <para style="Heading2">
+    Bank Details
+    </para>
+
+    <tal:block define="root python:here.getAccountingRoot()" >
+    <para tal:condition="root/getBankAccountName" style="Normal">
+    <b>Account name:</b> <span tal:replace="root/getBankAccountName"/>
+    </para>
+    <para tal:condition="root/getBankAccountNumber">
+    <b>Account number:</b> <span tal:replace="root/getBankAccountNumber"/>
+    </para>
+    <para tal:condition="root/getBankAccountType">
+    <b>Account type:</b> <span tal:replace="root/getBankAccountType"/>
+    </para>
+    <para tal:condition="root/getBankName">
+    <b>Bank name:</b> <span tal:replace="root/getBankName"/>
+    </para>
+    <para tal:condition="root/getBankBranchCode">
+    <b>Branch:</b> <span tal:replace="root/getBankBranchCode"/>
+    </para>
+    <para tal:condition="root/getBankSwiftCode">
+    <b>Swift banking code:</b> <span tal:replace="root/getBankSwiftCode"/>
+    </para>
+
+    </tal:block>
+
+    <spacer length="10"/>
+
+    <para style="Small">
+    Computer Generated Copy Tax Invoice
+    </para>
+
+</story>
+
+</document>

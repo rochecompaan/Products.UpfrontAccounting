@@ -1,0 +1,110 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="upfrontaccounting">
+
+<body>
+
+<div metal:fill-slot="main">
+
+<metal:body_macro metal:define-macro="body"
+    tal:define="base_macros here/base/macros;
+        field_macro here/widgets/field/macros/view;">
+
+    <metal:field use-macro="python:here.widget('effectiveDate', mode='view')">
+        effectiveDate
+    </metal:field>
+
+    <div class="field">
+
+        <label for="items" i18n:translate="label_transaction_entries"
+            >Transaction entries</label>
+
+        <table
+            id="TransactionTable"
+            summary="Transaction entries"
+            class="grid"
+            cellpadding="0" cellspacing="0">
+
+            <thead>
+
+                <tr metal:define-macro="transaction_entries_header">
+                    <th i18n:translate="label_account">Account</th>
+                    <th class="amount" i18n:translate="label_debit">Debit</th>
+                    <th class="amount" i18n:translate="label_credit">Credit</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr tal:repeat="item view/transactionEntries">
+                    <td tal:define="account item/getAccount">
+                        <a href=""
+                            tal:condition="account"
+                            tal:attributes="href account/absolute_url"
+                            tal:content="account/Title">Rent</a>
+                    </td>
+                    <td class="amount"
+                        tal:content="python:item.getDebitCredit() == 'Debit' and item.getAmount() or ''"
+                        >R 10.00</td>
+                    <td class="amount"
+                        tal:content="python:item.getDebitCredit() == 'Credit' and item.getAmount() or ''"
+                        >R 10.00</td>
+                </tr>
+
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th class="amount" tal:content="here/getDebitTotal">R100.00</th>
+                    <th class="amount" tal:content="here/getCreditTotal">R100.00</th>
+                </tr>
+            </tfoot>
+
+        </table>
+
+        <form name="edit_form"
+            method="post"
+            enctype="multipart/form-data"
+            action=""
+            tal:attributes="action python:here.absolute_url()+''">
+
+
+            <input class="context"
+                   type="submit"
+                   name=""
+                   value=""
+                   tal:condition="here/canUndoOrReverse|nothing"
+                   i18n:attributes="value"
+                   tal:attributes="value string:reverse transaction; 
+                                    name string:reverse_transaction:method;
+                                    " />
+
+            <input class="context"
+                   type="submit"
+                   name=""
+                   value=""
+                    tal:condition="python:1"
+                   i18n:attributes="value"
+                   tal:attributes="value string:export csv; 
+                                    name string:csvexporter:method;
+                                    " />
+
+        </form>
+
+    </div>
+
+</metal:body_macro>
+
+<metal:body_macro metal:define-macro="folderlisting"/>
+
+</div>
+
+</body>
+
+</html>

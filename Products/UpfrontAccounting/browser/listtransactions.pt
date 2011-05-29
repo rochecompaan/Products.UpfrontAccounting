@@ -1,0 +1,237 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      i18n:domain="plone"
+      metal:use-macro="here/main_template/macros/master">
+
+<head>
+    <metal:calendar fill-slot="javascript_head_slot">
+        <!-- ECMAScript calendar -->
+        <style type="text/css" media="all"
+                tal:content="string:@import url($portal_url/jscalendar/calendar-system.css);"></style>
+        <script type="text/javascript"
+                tal:attributes="src string:$portal_url/jscalendar/calendar_stripped.js"></script>
+        <script type="text/javascript" charset="iso-8859-1"
+                tal:condition="exists: portal/jscalendar/calendar-en.js"
+                tal:attributes="src string:$portal_url/jscalendar/calendar-en.js"></script>
+    </metal:calendar>
+</head>
+
+<body>
+
+    <div metal:fill-slot="main"
+        tal:define="
+                start_date request/start_date|nothing;
+                end_date request/end_date|nothing;
+                review_state request/review_state|python:[];
+                batch view/batched_transactions;
+                ">
+
+      <form name="form_edit" action="." method="get"
+            tal:attributes="action view/name"
+        >
+        <div tal:replace="structure provider:plone.abovecontenttitle" />
+
+        <h1 class="documentFirstHeading">
+          <tal:block replace="structure python:getattr(here, here.getIcon(1)).tag(alt=here.portal_type)"/>
+          <span tal:content="python: putils.pretty_title_or_id(here)" tal:omit-tag="">Directory Id</span>
+        </h1>
+
+        <metal:filter metal:define-macro="filter_on_date">
+            <span tal:condition="request/filter|nothing">
+                Showing transactions between
+                <strong tal:content="python:plone_view.toLocalizedTime(start_date)"
+                    >1 January 2007</strong> to
+                <strong tal:content="python:plone_view.toLocalizedTime(end_date)"
+                    >31 January 2007</strong>
+            </span>
+            <span tal:condition="not:request/filter|nothing">
+                Showing all transactions
+            </span>
+
+            <dl id="filter" class="collapsible inline collapsedOnLoad">
+                <dt class="collapsibleHeader" i18n:translate="label_filter">Filter</dt>
+                <dd class="collapsibleContent">
+
+                    <div class="field">
+
+                        <label for="review_state" i18n:translate="label_review_status">Review status</label>
+
+                        <div class="formHelp" i18n:translate="help_search_review_status">
+                        You may search for items based on their
+                        review state. If you wish to constrain results to items
+                        in certain states, select them from this list.
+                        </div>
+
+                        <span class="optionsToggle" tal:define="tabindex tabindex/next">
+                        <input type="checkbox"
+                            onclick="javascript:toggleSelect(this, 'review_state:list', true);"
+                            name="rs_toggle"
+                            value="#"
+                            id="rs_toggle"
+                            class="noborder"
+                            checked="checked"
+                            tabindex=""
+                            tal:attributes="tabindex tabindex;"/>
+                        <label for="rs_toggle" i18n:translate="label_toggle">Select All/None
+                        </label>
+                        <br />
+                        </span>
+
+                        <tal:states repeat="state view/states">
+                        <input class="noborder"
+                            type="checkbox"
+                            name="review_state:list"
+                            checked="checked"
+                            tal:attributes="value python:state.getId();
+                                            id python:normalizeString(state.getId());
+                                            checked python:state.getId() in review_state" />
+                        <label for=""
+                            tal:attributes="for python:normalizeString(state.getId())"
+                            i18n:translate=""
+                            tal:content="python:state.title"
+                            />
+                        <br />
+                        </tal:states>
+                    </div>
+
+                    <div class="field">
+
+                        <label i18n:translate="label_from">From</label>
+
+                        <div tal:define="inputname string:start_date;
+                                formname string:edit_form;
+                                show_hm python:False;
+                                inputvalue start_date">
+                            <div metal:use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                            calendar pop-up
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="field">
+
+                        <label i18n:translate="label_to">To</label>
+
+                        <div tal:define="inputname string:end_date;
+                                formname string:edit_form;
+                                show_hm python:False;
+                                inputvalue end_date">
+
+                            <div metal:use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                            calendar pop-up
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <input class="standalone"
+                            tabindex=""
+                            type="submit"
+                            name="filter"
+                            value="Filter"
+                            i18n:attributes="value"
+                            tal:attributes="tabindex tabindex/next"
+                            />
+                    </div>
+
+                </dd>
+
+            </dl>
+        </metal:filter>
+        <br/>
+        <br/>
+
+        <p class="discreet"
+            tal:condition="not: batch"
+            i18n:translate="description_no_transactions">
+            This folder has no transactions.
+        </p>
+
+        <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+            <tal:transactions tal:repeat="brain batch">
+                <tal:transaction tal:define="transaction brain/getObject">
+
+                <a tal:attributes="href transaction/absolute_url"
+                tal:content="python:'%s - %s' % (
+                        here.toLocalizedTime(transaction.EffectiveDate()), transaction.Title())">
+                    2009-01-01 - June Rent
+                </a>
+                (<span tal:content="transaction/review_state">
+                    posted
+                </span>)
+
+                <table class="grid"
+                    summary="Content listing"
+                    i18n:attributes="summary summary_content_listing;"
+                    cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="300px">&nbsp;<tal:title i18n:translate="listingheader_account"
+                            >Account</tal:title>&nbsp;</th>
+                        <th width="100px">&nbsp;<tal:size i18n:translate="listingheader_debit"
+                            >Debit</tal:size>&nbsp;</th>
+                        <th width="100px">&nbsp;<tal:modified i18n:translate="listingheader_modified"
+                            >Credit</tal:modified>&nbsp;</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tal:entries tal:repeat="entry transaction/entries">
+                    <tal:exists condition="entry/getAccount">
+                    <tr>
+                        <td tal:condition="entry/getAccount" 
+                            tal:define="account entry/getAccount">
+                            <a href=""
+                                tal:attributes="href account/absolute_url| nothing"
+                                tal:content="account/Title|nothing">Rent</a>
+                        </td>
+                        <td class="amount"
+                            tal:content="python:entry.getDebitCredit() == 'Debit' and entry.getAmount() or ''"
+                            >R 10.00</td>
+                        <td class="amount"
+                            tal:content="python:entry.getDebitCredit() == 'Credit' and entry.getAmount() or ''"
+                            >R 10.00</td>
+                        </tr>
+                    </tal:exists>
+                    </tal:entries>
+                </tbody>
+
+                </table>
+
+                </tal:transaction>
+            </tal:transactions>
+
+        <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+        <input class="standalone"
+            type="submit"
+            name=""
+            value=""
+            i18n:attributes="value"
+            tal:attributes="value string:Export CSV; 
+                            name string:csvexporter:method;" />
+
+        <input class="standalone"
+            tabindex=""
+            type="submit"
+            name="post_transactions"
+            value="Post pending transactions"
+            i18n:attributes="value"
+            tal:attributes="tabindex tabindex/next"
+            />
+
+
+        <div metal:use-macro="context/document_actions/macros/document_actions">
+        Document actions (print, sendto etc)
+        </div>
+
+      </form>
+    </div>
+
+</body>
+</html>
+
+

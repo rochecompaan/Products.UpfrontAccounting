@@ -1,0 +1,181 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="upfrontaccounting">
+
+<head><title></title></head>
+
+<body>
+
+<metal:body_macro metal:define-macro="body">
+
+<form name="edit_form"
+    method="post"
+    enctype="multipart/form-data"
+    action=""
+    tal:attributes="action python:here.absolute_url()+'/'+template.id">
+
+    <input type="hidden" name="form.submitted" value="1" />
+
+    <table id="InvoiceHeader"
+        cellspacing="0" cellpadding="0">
+        <tr>
+            <td colspan="2" tal:define="field python:here.Schema().get('title')">
+                <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <tal:fields tal:define="field python:here.Schema().get('CustomerAccount')">
+                    <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+                </tal:fields>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <tal:fields tal:define="field python:here.Schema().get('InvoiceCurrency')">
+                    <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+                </tal:fields>
+            </td>
+            <td width="50%">
+                <tal:fields tal:define="field python:here.Schema().get('ExchangeRate')">
+                    <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+                </tal:fields>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <tal:fields tal:define="field python:here.Schema().get('CalculateTax')">
+                    <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+                </tal:fields>
+                <script>
+                    calctax = document.getElementById('CalculateTax')
+                    calctax.setAttribute('onchange', "toggle_boolean('CalculateTax', 'CalculateTax_hidden'); calcInvoiceTotals(); return true")
+                </script>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <tal:fields tal:define="field python:here.Schema().get('Notes')">
+                    <metal:fieldMacro use-macro="python:here.widget(field.getName(), mode='edit')" />
+                </tal:fields>
+            </td>
+        </tr>
+    </table>
+
+    <metal:itemstable metal:define-macro="itemstable">
+    <table
+        id="InvoiceItems"
+        summary="Invoice items edit form"
+        cellspacing="0" cellpadding="0">
+
+        <thead>
+
+            <tr>
+                <th class="delete">&nbsp;</th>
+                <th>Description</th>
+                <th class="unit">Unit</th>
+                <th class="quantity amount">Quantity</th>
+                <th class="price amount">Rate</th>
+                <th class="total amount">Total</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="invoice-items">
+            <tal:items repeat="item here/objectValues">
+                <tr class="item" tal:attributes="itemId item/getId">
+                    <td><img class="delitem" src="delete.png" tal:attributes="src string:${portal_url}/delete.png"/></td>
+                    <td>
+                        <textarea class="Description" rows="3" tal:attributes="
+                            name string:item.${item/getId}.description"
+                            tal:content="item/Description">
+                        </textarea>
+                    </td>
+                    <td>
+                        <input size="6" tal:attributes="
+                            name string:item.${item/getId}.Unit;
+                            value item/getUnit"/>
+                    </td>
+                    <td>
+                        <input size="6" class="amount" tal:attributes="
+                            name string:item.${item/getId}.Quantity;
+                            value item/getQuantity"/>
+                    </td>
+                    <td>
+                        <input size="10" class="amount" tal:attributes="
+                            name string:item.${item/getId}.Rate;
+                            value item/getRate"/>
+                    </td>
+                    <td class="total amount" tal:attributes="
+                        id string:item-${item/getId}-total"
+                        tal:content="item/getTotal">
+                    </td>
+                </tr>
+            </tal:items>
+        </tbody>
+
+    </table>
+    </metal:itemstable>
+
+    <div class="newline">
+        &nbsp;<a href="#" id="additem" i18n:translate="label_add_new_line"><img src="add.png" tal:attributes="src string:${portal_url}/add.png"/>&nbsp;Add New Line</a>
+    </div>
+
+    <metal:totals define-macro="invoicetotals">
+    <table id="InvoiceTotals"
+        cellpadding="0" cellspacing="0">
+        <tr>
+            <th i18n:translate="label_subtotal">Subtotal</th>
+            <td id="invoice_subtotal"
+                tal:content="python:here.getSubTotal()" >90.00</td>
+        </tr>
+        <tr>
+            <th i18n:translate="label_tax">Tax</th>
+            <td id="invoice_tax"
+                tal:content="python:here.getTaxAmount()">10.00</td>
+        </tr>
+        <tr>
+            <th i18n:translate="label_total">Total</th>
+            <td id="invoice_total"
+                tal:content="python:here.getTotal()">100.00</td>
+        </tr>
+    </table>
+    </metal:totals>
+
+    <input class="context"
+        tabindex=""
+        type="submit"
+        name="form_submit"
+        value="Save"
+        i18n:attributes="value"
+        tal:attributes="tabindex tabindex/next"
+        />
+    <input class="standalone"
+        tabindex=""
+        type="submit"
+        name="form.button.cancel"
+        value="Cancel"
+        i18n:attributes="value"
+        tal:attributes="tabindex tabindex/next"
+        />
+
+</form>
+
+<input type="hidden" id="sales_tax_percentage" value=""
+    tal:attributes="value here/getSalesTaxPercentage"/>
+
+</metal:body_macro>
+
+</body>
+
+</html>
+
+

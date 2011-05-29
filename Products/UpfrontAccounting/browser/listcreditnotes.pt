@@ -1,0 +1,270 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      i18n:domain="plone"
+      metal:use-macro="here/main_template/macros/master">
+
+<head>
+    <metal:block fill-slot="top_slot">
+    <tal:insert tal:replace="nothing"
+            tal:define="dummy python:request.set('enable_border', 1)" />
+    </metal:block>
+</head>
+
+<body>
+
+    <div metal:fill-slot="main"
+        tal:define="
+            start_date request/start_date|nothing;
+            end_date request/end_date|nothing;
+            review_state request/review_state|python:[];
+            batch view/batch;
+            ">
+
+        <style>
+            .amount {
+                text-align: right;
+                white-space: nowrap;
+            }
+            #sortable tfoot th {
+                text-transform: none;
+            }
+        </style>
+
+            <form name="edit_form" method="post" action=""
+                    tal:attributes="action view/name">
+
+                <span tal:condition="request/filter|nothing">
+                    Showing credit notes between
+                    <strong tal:content="python:plone_view.toLocalizedTime(start_date)"
+                        >1 January 2007</strong> to
+                    <strong tal:content="python:plone_view.toLocalizedTime(end_date)"
+                        >31 January 2007</strong>
+                </span>
+                <span tal:condition="not:request/filter|nothing">
+                    Showing all credit notes
+                </span>
+
+
+                <dl id="filter" class="collapsible inline collapsedOnLoad">
+                    <dt class="collapsibleHeader" i18n:translate="label_filter">Filter</dt>
+                    <dd class="collapsibleContent">
+
+                    <div class="field">
+
+                        <label for="review_state" i18n:translate="label_review_status">Review status</label>
+
+                        <div class="formHelp" i18n:translate="help_search_review_status">
+                            You may search for items based on their
+                            review state. If you wish to constrain results to items
+                            in certain states, select them from this list.
+                        </div>
+
+                        <span class="optionsToggle" tal:define="tabindex tabindex/next">
+                            <input type="checkbox"
+                                    onclick="javascript:toggleSelect(this, 'review_state:list', true);"
+                                    name="rs_toggle"
+                                    value="#"
+                                    id="rs_toggle"
+                                    class="noborder"
+                                    checked="checked"
+                                    tabindex=""
+                                    tal:attributes="tabindex tabindex;"/>
+                            <label for="rs_toggle"
+                                    i18n:translate="label_toggle"
+                                    >Select All/None
+                            </label>
+                            <br />
+                        </span>
+
+                        <tal:states define="
+                                navtree_props portal_properties/navtree_properties;
+                                states python:wtool.invoice_workflow.states.objectValues();">
+                            <tal:items repeat="state states">
+                            <input class="noborder"
+                                    type="checkbox"
+                                    name="review_state:list"
+                                    checked="checked"
+                                    tal:attributes="value python:state.getId();
+                                                    id python:normalizeString(state.getId());
+                                                    checked python:state.getId() in review_state" />
+                            <label for=""
+                                    tal:attributes="for python:normalizeString(state.getId())"
+                                    i18n:translate=""
+                                    tal:content="python:state.title"
+                                    />
+                            <br />
+                            </tal:items>
+                        </tal:states>
+                    </div>
+
+                    <div class="field">
+
+                        <label i18n:translate="label_from">From</label>
+
+                        <div tal:define="inputname string:getCreditNoteDate_from;
+                                formname string:edit_form;
+                                show_hm python:False;
+                                inputvalue start_date">
+                            <div metal:use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                            calendar pop-up
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="field">
+
+                        <label i18n:translate="label_to">To</label>
+
+                        <div tal:define="inputname string:getCreditNoteDate_to;
+                                formname string:edit_form;
+                                show_hm python:False;
+                                inputvalue end_date">
+
+                            <div metal:use-macro="here/calendar_macros/macros/calendarDatePickerBox">
+                            calendar pop-up
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <input class="standalone"
+                            tabindex=""
+                            type="submit"
+                            name="filter"
+                            value="Filter"
+                            i18n:attributes="value"
+                            tal:attributes="tabindex tabindex/next"
+                            />
+                    </div>
+
+                </dd>
+
+            </dl>
+
+        </form>
+
+        <form name="folderContentsForm"
+            method="post"
+            action="folder_object"
+            tal:attributes="action here_url">
+
+            <h1>
+                <tal:block replace="structure python:getattr(context, context.getIcon(1))"/>
+                <span tal:content="python: context.Title() and context.Title() or context.getId()" tal:omit-tag="">Directory Id</span>
+            </h1>
+
+            <a href=""
+                class="link-parent"
+                tal:define="parent_url python:here.navigationParent(here, fallThroughDefaultPage = False, checkPermissions = ['List folder contents'])"
+                tal:condition="parent_url"
+                tal:attributes="href string:${parent_url}/folder_contents"
+                i18n:translate="go_to_parent_url">
+                Up one level
+            </a>
+
+            <p tal:content="here/Description">
+                Description
+            </p>
+
+            <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+            <table id="sortable"
+                class="listing"
+                summary="Content listing"
+                tal:define="
+                            use_view_action site_properties/typesUseViewActionInListings|python:();
+                            orderable_iface string:OFS.IOrderSupport.IOrderedContainer;
+                            isOrderable python:ifacetool.objectImplements(here, orderable_iface);
+                            nosortclass python:isOrderable and 'nosort' or '';"
+                i18n:attributes="summary summary_content_listing;">
+
+                <thead>
+                    <metal:block tal:condition="batch|nothing">
+                    <tr>
+                        <th tal:attributes="class python:nosortclass"
+                            >&nbsp;<tal:title i18n:translate="listingheader_title"
+                            >Title</tal:title>&nbsp;</th>
+                        <th tal:attributes="class python:nosortclass"
+                            >&nbsp;<tal:size i18n:translate="listingheader_quotedate"
+                            >Credit Note Date</tal:size>&nbsp;</th>
+                        <th tal:attributes="class python:nosortclass"
+                            >&nbsp;<tal:state i18n:translate="listingheader_account"
+                            >Account</tal:state>&nbsp;</th>
+                        <th tal:attributes="class python:nosortclass"
+                            >&nbsp;<tal:state i18n:translate="listingheader_state"
+                            >State</tal:state>&nbsp;</th>
+                        <th tal:attributes="class python:nosortclass"
+                            >&nbsp;<tal:state i18n:translate="listingheader_totla"
+                            >Total</tal:state>&nbsp;</th>
+                    </tr>
+                    </metal:block>
+                </thead>
+
+                <metal:block tal:condition="batch|nothing">
+
+                <tbody tal:define="arrowUp portal/arrowUp.gif;
+                        arrowDown portal/arrowDown.gif;
+                        getRelativeContentURL nocall:utool/getRelativeContentURL">
+                <tal:items tal:repeat="item batch">
+                    <tr tal:define="oddrow               repeat/item/odd;
+                                    item_url             item/getURL|item/absolute_url;
+                                    item_title_or_id   item/pretty_title_or_id;
+                                    item_description     item/Description;
+                                    item_type            item/portal_type;
+                                    item_type_class      python:'contenttype-' + normalizeString(item_type);
+                                    item_wf_state        item/review_state|python: wtool.getInfoFor(item, 'review_state', '');
+                                    item_wf_state_class  python:'state-' + normalizeString(item_wf_state);
+                                    item_use_view        python:item_type in use_view_action;"
+                        tal:attributes="class python:oddrow and 'even' or 'odd'" >
+
+                        <tal:comment replace="nothing">
+                                * We have to check if the browserDefault stuff is really necessary
+                                * Create title_or_id metadata in the catalog (why not just use item.Title or item.getId? (alecm))
+                        </tal:comment>
+
+                        <td tal:define="url python:item_use_view and item_url+'/view' or item_url+'/'">
+                            <span tal:attributes="class item_type_class">
+                            <a href="#" tal:attributes="href  url;
+                                                    title string: $item_type: $item_description;
+                                                    class string:$item_wf_state_class visualIconPadding;">
+                                <span tal:content="item_title_or_id">
+                                Item Title
+                                </span>
+                            </a>
+                            </span>
+                            
+                            <span class="state-expired"
+                                tal:condition="python:portal.isExpired(item)"
+                                i18n:translate="time_expired">expired</span>
+                        </td>
+
+                        <td tal:content="python:here.toLocalizedTime(item.getCreditNoteDate())">
+                            2005-01-01
+                        </td>
+                        <td tal:content="item/getCustomerAccountTitle">
+                            ACME
+                        </td>
+                        <td tal:content="item_wf_state">
+                            Posted
+                        </td>
+                        <td tal:content="python:item.getTotal()"
+                            style="text-align: right; white-space: nowrap">
+                            R1000.00
+                        </td>
+
+                    </tr>
+                </tal:items>
+            </tbody>
+            </metal:block>
+            </table>
+            <!-- Navigation -->
+            <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+        </form>
+
+    </div>
+
+</body>
+</html>
