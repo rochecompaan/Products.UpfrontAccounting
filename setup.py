@@ -24,7 +24,8 @@ setup(name='Products.UpfrontAccounting',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'zope.index',
+          'Plone',
       ],
       entry_points="""
       # -*- Entry points: -*-
