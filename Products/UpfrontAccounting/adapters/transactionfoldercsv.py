@@ -39,7 +39,7 @@ class TransactionFolderCSVWriter(object):
         return self.context.transaction_catalog(self._genContentFilter())
 
     def write(self):
-        """ Return tranѕactions for a given date as CSV file. We return
+        """ Return transactions for a given date as CSV file. We return 
             a StringIO instance to allow streaming of the output if
             required.
         """
