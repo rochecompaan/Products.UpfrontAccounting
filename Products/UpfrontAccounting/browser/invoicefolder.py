@@ -1,5 +1,5 @@
 from Products.Five import BrowserView
-from Products.CMFPlone import Batch
+from Products.CMFPlone.PloneBatch import Batch
 from Products.CMFPlone.utils import getToolByName
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.UpfrontAccounting.interfaces import IMailInvoice

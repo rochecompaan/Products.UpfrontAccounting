@@ -1,7 +1,7 @@
 from Products.Five import BrowserView
 from zope.interface import implements, Interface
 from DateTime import DateTime
-from Products.CMFPlone import Batch
+from Products.CMFPlone.PloneBatch import Batch
 from Products.CMFCore.utils import getToolByName
 
 class ListTransactionsView(BrowserView):

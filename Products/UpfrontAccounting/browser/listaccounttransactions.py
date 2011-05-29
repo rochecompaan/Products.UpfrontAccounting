@@ -1,5 +1,5 @@
 from Products.Five import BrowserView
-from Products.CMFPlone import Batch
+from Products.CMFPlone.PloneBatch import Batch
 from DateTime import DateTime
 
 class ListAccountTransactionsView(BrowserView):
