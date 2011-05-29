@@ -1,6 +1,11 @@
 Introduction
 ============
 
+    NOTE: The version imported into Github is being migrated to Plone 4. To
+    help with the migration use the buildout located here:
+
+        https://github.com/rochecompaan/upfrontaccounting.buildout
+
 Upfront Accounting is a fully functional accounting system for Plone. It
 is in production at Upfront Systems and a few small companies that are
 involved with Upfront Systems. Earlier versions have been in use for
