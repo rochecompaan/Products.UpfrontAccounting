@@ -28,7 +28,7 @@ import sys
 from Products.FinanceFields.MoneyField import MoneyField
 from Products.FinanceFields.MoneyWidget import MoneyWidget
 from Products.CMFCore import permissions
-from upfront.simplereferenceField import SimpleReferenceField
+from upfront.simplereferencefield import SimpleReferenceField
 
 ##code-section module-header #fill in your manual code here
 from Products.FinanceFields.Money import Money
