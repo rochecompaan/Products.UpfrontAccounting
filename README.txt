@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Upfront Accounting is fully functional accounting system for Plone. It
+Upfront Accounting is a fully functional accounting system for Plone. It
 is in production at Upfront Systems and a few small companies that are
 involved with Upfront Systems. Earlier versions have been in use for
 almost 5 years.
