@@ -343,14 +343,13 @@ class entryproxy:
 from AccessControl import allow_class
 allow_class(entryproxy)
 
+from plone.indexer.decorator import indexer
+@indexer(interfaces.IAccount)
 def getBankStatementTextAsString(obj, **kwargs):
     """ Return BankStatementText lines field as text for indexing
     """
     return '\n'.join(obj.getBankStatementText())
 
-from Products.CMFPlone.CatalogTool import registerIndexableAttribute
-registerIndexableAttribute('BankStatementTextAsString',
-    getBankStatementTextAsString)
 ##/code-section module-footer
 
 
