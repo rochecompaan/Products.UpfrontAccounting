@@ -6,7 +6,7 @@ from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 from Products.CMFCore import utils as cmfutils
 from Products.Five.browser import pagetemplatefile
-from Products.Five.formlib import formbase
+from five.formlib import formbase
 from Products.FinanceFields.config import CURRENCY_DISPLAY_LIST
 from Products.UpfrontAccounting.config import COUNTRY_NAMES
 from Products.UpfrontAccounting.content.AccountingFolder import \
