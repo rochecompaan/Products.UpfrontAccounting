@@ -28,7 +28,7 @@ from Products.FinanceFields.MoneyWidget import MoneyWidget
 from BTrees.IOBTree import IOBTree
 from DocumentTemplate import sequence
 from Products.FinanceFields.Money import Money
-from Products.SimpleReferenceField.SimpleReferenceField import SimpleReferenceField
+from upfront.simplereferencefield import SimpleReferenceField
 
 ##code-section module-header #fill in your manual code here
 from zope.interface import classImplements

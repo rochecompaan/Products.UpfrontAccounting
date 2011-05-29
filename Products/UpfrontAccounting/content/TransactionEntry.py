@@ -25,7 +25,7 @@ from Products.UpfrontAccounting.config import *
 from Products.FinanceFields.MoneyField import MoneyField
 from Products.FinanceFields.MoneyWidget import MoneyWidget
 from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import ReferenceBrowserWidget
-from Products.SimpleReferenceField.SimpleReferenceField import SimpleReferenceField
+from upfront.simplereferencefield import SimpleReferenceField
 
 ##code-section module-header #fill in your manual code here
 from Products.CMFCore import permissions
