@@ -1,4 +1,5 @@
 from zope.interface import implements
+from Products.CMFCore.utils import getToolByName
 from Products.UpfrontAccounting.interfaces import IZeroMoneyInstance, \
     ICurrency
 from Products.FinanceFields.Money import Money
@@ -14,6 +15,12 @@ class ZeroMoneyAdapter(object):
 
     def __call__(self):
         currency = self.context.getAccountingCurrency()
+        # upon adding and accounting folder, no currency is set so use
+        # the site currency
+        if not currency:
+            props_tool = getToolByName(self, 'portal_properties')
+            sheet = props_tool.get('financial_properties', {})
+            currency = sheet.getProperty('default_currency', None)
         return Money('0.00', currency)
 
 
