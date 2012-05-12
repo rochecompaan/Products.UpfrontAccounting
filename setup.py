@@ -27,6 +27,12 @@ setup(name='Products.UpfrontAccounting',
           'zope.index',
           'Plone',
       ],
+      tests_require=[],
+      extras_require={
+        'test': [
+          'plone.app.testing',
+        ],
+      },
       entry_points="""
       # -*- Entry points: -*-
       """,
