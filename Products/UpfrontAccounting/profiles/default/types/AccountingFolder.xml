@@ -10,6 +10,7 @@
  <property name="content_meta_type">AccountingFolder</property>
  <property name="product">UpfrontAccounting</property>
  <property name="factory">addAccountingFolder</property>
+ <property name="add_view_expr">string:${folder_url}/+/addAccountingFolder</property>
  <property name="immediate_view">base_view</property>
  <property name="global_allow">True</property>
  <property name="filter_content_types">True</property>
