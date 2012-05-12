@@ -44,9 +44,8 @@
                         full_view full_view|request/full_view|python:True;"
             tal:attributes="action here/absolute_url">
 
-            <h1 class="documentFirstHeading" tal:define="view_title view_title|request/view_title|string:">
-                <tal:block replace="structure python:getattr(here, here.getIcon(1))"/>
-                <span tal:content="python: view_title and here.utranslate(view_title) or putils.pretty_title_or_id(here)" tal:omit-tag="">Directory Id</span>
+            <h1 metal:use-macro="context/kss_generic_macros/macros/generic_title_view">
+                Generic KSS Title. Is rendered with class="documentFirstHeading".
             </h1>
 
             <div tal:replace="structure provider:plone.abovecontentbody" />
@@ -78,7 +77,7 @@
                             in certain states, select them from this list.
                             </div>
 
-                            <span class="optionsToggle" tal:define="tabindex tabindex/next">
+                            <span class="optionsToggle">
                             <input type="checkbox"
                                 onclick="javascript:toggleSelect(this, 'review_state:list', true);"
                                 name="rs_toggle"
@@ -86,8 +85,7 @@
                                 id="rs_toggle"
                                 class="noborder"
                                 checked="checked"
-                                tabindex=""
-                                tal:attributes="tabindex tabindex;"/>
+                                />
                             <label for="rs_toggle" i18n:translate="label_toggle">Select All/None</label>
                             <br />
                             </span>
@@ -97,11 +95,11 @@
                                         type="checkbox"
                                         name="review_state:list"
                                         checked="checked"
-                                        tal:attributes="value python:state.getId();
-                                                        id python:normalizeString(state.getId());
+                                        tal:attributes="value state/getId;
+                                                        id state/getId;
                                                         checked python:state.getId() in review_state" />
                                 <label for=""
-                                        tal:attributes="for python:normalizeString(state.getId())"
+                                        tal:attributes="for state/getId"
                                         i18n:translate=""
                                         tal:content="python:state.title"
                                         />
@@ -142,12 +140,10 @@
 
                         <div class="field">
                             <input class="standalone"
-                                tabindex=""
                                 type="submit"
                                 name="filter"
                                 value="Filter"
                                 i18n:attributes="value"
-                                tal:attributes="tabindex tabindex/next"
                                 />
                         </div>
 
@@ -336,11 +332,6 @@
                 />
 
         </form>
-
-    <div metal:use-macro="here/document_actions/macros/document_actions">
-        Document actions (print, sendto etc)
-    </div>
-
 
 </div>
 

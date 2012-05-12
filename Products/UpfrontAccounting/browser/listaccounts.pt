@@ -26,10 +26,10 @@
                     filter_date view/filter_date">
         <div tal:replace="structure provider:plone.abovecontenttitle" />
 
-        <h1 class="documentFirstHeading">
-          <tal:block replace="structure python:getattr(here, here.getIcon(1)).tag(alt=here.portal_type)"/>
-          <span tal:content="python: putils.pretty_title_or_id(here)" tal:omit-tag="">Directory Id</span>
+        <h1 metal:use-macro="context/kss_generic_macros/macros/generic_title_view">
+            Generic KSS Title. Is rendered with class="documentFirstHeading".
         </h1>
+
 
         <div tal:replace="structure provider:plone.abovecontentbody" />
 
@@ -69,12 +69,10 @@
 
                     <div class="field">
                         <input class="standalone"
-                            tabindex=""
                             type="submit"
                             name="filter"
                             value="Sumbit"
                             i18n:attributes="value"
-                            tal:attributes="tabindex tabindex/next"
                             />
                     </div>
 
@@ -192,10 +190,6 @@
             <input tal:replace="structure context/@@authenticator/authenticator" />
 
         </form>
-
-        <div metal:use-macro="context/document_actions/macros/document_actions">
-        Document actions (print, sendto etc)
-        </div>
 
     </div>
 
