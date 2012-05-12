@@ -120,7 +120,7 @@
                                    item_type            item/portal_type;
                                    item_size            item/getObjSize;
                                    item_modified        item/ModificationDate;
-                                   item_type_class      python:'contenttype-' + normalizeString(item_type);
+                                   item_type_class      python:'contenttype-' + item_type;
                                    item_use_view        python:item_type in use_view_action;
                                    hasGetUrl            python:hasattr(item.aq_explicit, 'getURL');
                                    item_rel_url         python:hasGetUrl and item.getURL(relative=1) or getRelativeContentURL(item);

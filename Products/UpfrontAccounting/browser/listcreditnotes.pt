@@ -84,11 +84,11 @@
                                     type="checkbox"
                                     name="review_state:list"
                                     checked="checked"
-                                    tal:attributes="value python:state.getId();
-                                                    id python:normalizeString(state.getId());
+                                    tal:attributes="value state/getId;
+                                                    id state/getId;
                                                     checked python:state.getId() in review_state" />
                             <label for=""
-                                    tal:attributes="for python:normalizeString(state.getId())"
+                                    tal:attributes="for state/getId"
                                     i18n:translate=""
                                     tal:content="python:state.title"
                                     />
@@ -213,9 +213,9 @@
                                     item_title_or_id   item/pretty_title_or_id;
                                     item_description     item/Description;
                                     item_type            item/portal_type;
-                                    item_type_class      python:'contenttype-' + normalizeString(item_type);
+                                    item_type_class      python:'contenttype-' + item_type;
                                     item_wf_state        item/review_state|python: wtool.getInfoFor(item, 'review_state', '');
-                                    item_wf_state_class  python:'state-' + normalizeString(item_wf_state);
+                                    item_wf_state_class  python:'state-' + item_wf_state;
                                     item_use_view        python:item_type in use_view_action;"
                         tal:attributes="class python:oddrow and 'even' or 'odd'" >
 
