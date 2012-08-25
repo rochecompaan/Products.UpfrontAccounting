@@ -128,20 +128,16 @@ For <input type="radio" name="customer_type" checked="checked"
 </div>
 
 <input class="context"
-        tabindex=""
         type="submit"
         name="createQuote:method"
         value="Create quote"
         i18n:attributes="value"
-        tal:attributes="tabindex tabindex/next"
         />
 <input class="standalone"
-        tabindex=""
         type="submit"
         name="form.button.cancel"
         value="Cancel"
         i18n:attributes="value"
-        tal:attributes="tabindex tabindex/next"
         />
 
 </form>

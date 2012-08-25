@@ -49,8 +49,6 @@
             value="Next"
             name="selectformat"
             i18n:attributes="value"
-            tabindex=""
-            tal:attributes="tabindex tabindex/next;"
             />
 
     </form>
@@ -112,8 +110,6 @@
                      value="Next"
                      name="preview"
                      i18n:attributes="value"
-                     tabindex=""
-                     tal:attributes="tabindex tabindex/next;"
                      />
           </div>
 
@@ -183,8 +179,6 @@
                     value="Start Import"
                     name="import"
                     i18n:attributes="value"
-                    tabindex=""
-                    tal:attributes="tabindex tabindex/next;"
                     />
 
         </div>

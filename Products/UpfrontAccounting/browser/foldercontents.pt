@@ -95,7 +95,7 @@
                             in certain states, select them from this list.
                             </div>
 
-                            <span class="optionsToggle" tal:define="tabindex tabindex/next">
+                            <span class="optionsToggle">
                             <input type="checkbox"
                                     onclick="javascript:toggleSelect(this, 'review_state:list', true);"
                                     name="rs_toggle"
@@ -103,8 +103,7 @@
                                     id="rs_toggle"
                                     class="noborder"
                                     checked="checked"
-                                    tabindex=""
-                                    tal:attributes="tabindex tabindex;"/>
+                                    />
                             <label for="rs_toggle"
                                     i18n:translate="label_toggle"
                                     >Select All/None
@@ -166,12 +165,10 @@
 
                         <div class="field">
                             <input class="standalone"
-                                tabindex=""
                                 type="submit"
                                 name="filter"
                                 value="Filter"
                                 i18n:attributes="value"
-                                tal:attributes="tabindex tabindex/next"
                                 />
                         </div>
 

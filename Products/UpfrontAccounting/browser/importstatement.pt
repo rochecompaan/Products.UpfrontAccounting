@@ -47,8 +47,6 @@
           value="Next"
           name="selectformat"
           i18n:attributes="value"
-          tabindex=""
-          tal:attributes="tabindex tabindex/next;"
           />
 
     </form>
@@ -115,8 +113,6 @@
                       value="Next"
                       name="mapfields"
                       i18n:attributes="value"
-                      tabindex=""
-                      tal:attributes="tabindex tabindex/next;"
                       />
           </div>
 
@@ -208,8 +204,6 @@
                     value="Next"
                     name="selectaccounts"
                     i18n:attributes="value"
-                    tabindex=""
-                    tal:attributes="tabindex tabindex/next;"
                     />
 
             <input type="hidden" name="current_path"
@@ -370,8 +364,6 @@
                     value="Import"
                     name="import"
                     i18n:attributes="value"
-                    tabindex=""
-                    tal:attributes="tabindex tabindex/next;"
                     />
 
         </div>

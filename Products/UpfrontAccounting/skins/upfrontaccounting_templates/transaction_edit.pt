@@ -73,12 +73,10 @@
             <br/><br/>
 
             <input class="context"
-                    tabindex=""
                     type="submit"
                     name="form_submit"
                     value="Save"
                     i18n:attributes="value"
-                    tal:attributes="tabindex tabindex/next"
                     />
 
         </form>

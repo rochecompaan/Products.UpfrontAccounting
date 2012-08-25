@@ -155,20 +155,16 @@
     </metal:totals>
 
     <input class="context"
-        tabindex=""
         type="submit"
         name="form_submit"
         value="Save"
         i18n:attributes="value"
-        tal:attributes="tabindex tabindex/next"
         />
     <input class="standalone"
-        tabindex=""
         type="submit"
         name="form.button.cancel"
         value="Cancel"
         i18n:attributes="value"
-        tal:attributes="tabindex tabindex/next"
         />
 
 </form>

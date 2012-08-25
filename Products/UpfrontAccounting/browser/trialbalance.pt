@@ -58,7 +58,7 @@
             </div>
 
             <div class="field">
-                <input tabindex=""
+                <input
                     class="standalone"
                     type="submit"
                     name="submit"
