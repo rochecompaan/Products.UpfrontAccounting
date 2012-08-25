@@ -75,9 +75,7 @@
                             <br />
                         </span>
 
-                        <tal:states define="
-                                navtree_props portal_properties/navtree_properties;
-                                states python:wtool.invoice_workflow.states.objectValues();">
+                        <tal:states define="states python:wtool.invoice_workflow.states.objectValues();">
                             <tal:items repeat="state states">
                             <input class="noborder"
                                     type="checkbox"
@@ -170,30 +168,21 @@
             <table id="sortable"
                 class="listing"
                 summary="Content listing"
-                tal:define="
-                            use_view_action site_properties/typesUseViewActionInListings|python:();
-                            orderable_iface string:OFS.IOrderSupport.IOrderedContainer;
-                            isOrderable python:ifacetool.objectImplements(here, orderable_iface);
-                            nosortclass python:isOrderable and 'nosort' or '';"
+                tal:define="use_view_action site_properties/typesUseViewActionInListings|python:();"
                 i18n:attributes="summary summary_content_listing;">
 
                 <thead>
                     <metal:block tal:condition="batch|nothing">
                     <tr>
-                        <th tal:attributes="class python:nosortclass"
-                            >&nbsp;<tal:title i18n:translate="listingheader_title"
+                        <th>&nbsp;<tal:title i18n:translate="listingheader_title"
                             >Title</tal:title>&nbsp;</th>
-                        <th tal:attributes="class python:nosortclass"
-                            >&nbsp;<tal:size i18n:translate="listingheader_quotedate"
+                        <th>&nbsp;<tal:size i18n:translate="listingheader_quotedate"
                             >Credit Note Date</tal:size>&nbsp;</th>
-                        <th tal:attributes="class python:nosortclass"
-                            >&nbsp;<tal:state i18n:translate="listingheader_account"
+                        <th>&nbsp;<tal:state i18n:translate="listingheader_account"
                             >Account</tal:state>&nbsp;</th>
-                        <th tal:attributes="class python:nosortclass"
-                            >&nbsp;<tal:state i18n:translate="listingheader_state"
+                        <th>&nbsp;<tal:state i18n:translate="listingheader_state"
                             >State</tal:state>&nbsp;</th>
-                        <th tal:attributes="class python:nosortclass"
-                            >&nbsp;<tal:state i18n:translate="listingheader_totla"
+                        <th>&nbsp;<tal:state i18n:translate="listingheader_totla"
                             >Total</tal:state>&nbsp;</th>
                     </tr>
                     </metal:block>
